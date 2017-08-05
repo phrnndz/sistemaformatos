@@ -3,9 +3,9 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div class="page-header">
-				<h1>Logout success!</h1>
+				<h1>Sesión Terminada</h1>
 			</div>
-			<p>You are now logged out.</p>
+			<p>Gracias por utilizar nuestro sistema.</p>
 		</div>
 	</div><!-- .row -->
 </div><!-- .container -->

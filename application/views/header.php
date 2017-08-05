@@ -1,61 +1,56 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Site title</title>
+	<title>SACIMEX - SISTEMA DE FORMATOS</title>
 	<meta name="description" content="">
 	<meta name="keywords" content="">
 	<meta name="author" content="">
 
 	<!-- css -->
-	<link href="<?= base_url('assets/css/bootstrap.min.css') ?>" rel="stylesheet">
+	<link href="<?= base_url('assets/css/bootstrap.css') ?>" rel="stylesheet">
 	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
+	<link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet">
 
+	<link href="<?= base_url('assets/js/jquery-1.11.1.min.js') ?>" rel="stylesheet">
+	<link href="<?= base_url('assets/js/modernizr.custom.js') ?>" rel="stylesheet">
+
+	<!--webfonts-->
+	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	<!--[if lt IE 9]>
 		<script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
 		<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 	<![endif]-->
 </head>
 <body>
-
-	<header id="site-header">
-		<nav class="navbar navbar-default" role="navigation">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<a class="navbar-brand" href="<?= base_url() ?>">Site title</a>
+		<div class="sticky-header header-section ">
+			<div class="header-left">
+				<!--toggle button start-->
+				<!--toggle button end-->
+				<!--logo -->
+				<div class="logo">
+					<a href="index.html">
+						<h1>SACIMEX</h1>
+						<span>Sistema de formatos</span>
+					</a>
 				</div>
-				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav navbar-right">
+				<!--//logo-->
+			</div>
+			<div class="header-right">
+				<div class="user-name">
+					<p>
 						<?php if (isset($_SESSION['username']) && $_SESSION['logged_in'] === true) : ?>
-							<li><a href="<?= base_url('logout') ?>">Logout</a></li>
+							<a href="<?= base_url('logout') ?>">Logout</a> 
+							<span><?php echo "<br>".$_SESSION['username'];  ?></span>
 						<?php else : ?>
-							<li><a href="<?= base_url('register') ?>">Register</a></li>
-							<li><a href="<?= base_url('login') ?>">Login</a></li>
+							<a href="<?= base_url('login') ?>">Login</a>
 						<?php endif; ?>
-					</ul>
-				</div><!-- .navbar-collapse -->
-			</div><!-- .container-fluid -->
-		</nav><!-- .navbar -->
-	</header><!-- #site-header -->
-
-	<main id="site-content" role="main">
-		
-		<?php if (isset($_SESSION)) : ?>
-			<div class="container">
-				<div class="row">
-					<div class="col-md-12">
-						<?php var_dump($_SESSION); ?>
-					</div>
-				</div><!-- .row -->
-			</div><!-- .container -->
-		<?php endif; ?>
+					</p>
+					
+				</div>
+			</div>
+		</div>
 		

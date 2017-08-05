@@ -2,10 +2,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="page-header">
-				<h1>Login success!</h1>
-			</div>
-			<p>You are now logged in.</p>
+			<h5>Inicio de sesión correcto</h5>
 		</div>
 	</div><!-- .row -->
 </div><!-- .container -->
