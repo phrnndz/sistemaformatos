@@ -39,5 +39,36 @@ class Puestos_model extends CI_Model {
 		return $directivo;
 	}
 
+
+
+	// CRUD DE MANTENIMIENTO DE REGISTROS
+	public function get_all_users(){
+		$this->db->from('puestos');
+		$result= $this->db->get();
+		$puestos = $result->result_array();
+		return $puestos;
+	}
+	public function puesto_add($data){
+		$this->db->insert('puestos', $data);
+		return $this->db->insert_id();
+	}
+
+	public function get_info_by_id($id){
+		$this->db->from('puestos');
+		$this->db->where('id_puesto',$id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function puesto_update($where, $data){
+		$this->db->update('puestos', $data, $where);
+		return $this->db->affected_rows();
+	}
+
+	public function delete_by_id($id){
+		$this->db->where('id_puesto', $id);
+		$this->db->delete('puestos');
+	}
+
 }
 

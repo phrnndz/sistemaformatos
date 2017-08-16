@@ -1,14 +1,4 @@
-<div id="page-wrapper" style="min-height: 487px;">
-	<div class="main-page">
-		<h3 class="title1">Mantenimiento de información</h3>
-		<div class="grids widget-shadow">
-			<div class="form-group mb-n">
-        <div class="row">
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/">Usuarios</a>
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/formatos">formatos</a>
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/gerencias">gerencias</a>
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/puestos">puestos</a>
-        </div>
+
 				<div class="row">
 					<button class="btn" onclick="add_user()"><i class="glyphicon glyphicon-plus"></i>Nuevo Usuario</button>
 				</div>
@@ -22,6 +12,7 @@
 									<th>Unidad</th>
 									<th>Fecha Ingreso</th>
 									<th>Fecha Contrato</th>
+                  <th>Puesto</th>
 									<th>Nombre Interno</th>
 									<th>Acciones</th>
 						</tr>
@@ -35,7 +26,7 @@
 							<td><?php echo $item['unidad_usuario'];?></td>
 							<td><?php echo $item['ingreso_usuario'];?></td>
 							<td><?php echo $item['contrato_usuario'];?></td>
-							<!-- <td><?php //echo $item['puesto_nombre_oficial'];?></td> -->
+							<td><?php echo $item['puesto_nombre_oficial'];?></td>
 							<td><?php echo $item['nombre_interno_usuario'];?></td>
 							<!-- <td><?php // echo $item['iniciales_usuario'];?></td>
 							<td><?php // echo $item['clave_usuario'];?></td>
@@ -165,7 +156,12 @@
       }
     }
 
- 
+  </script>
+  <script>
+  $(document).ready( function () {
+    $('#tableUsers').DataTable();
+  } );
+
   </script>
  
   <!-- Bootstrap modal -->
@@ -217,7 +213,11 @@
             <div class="form-group">
               <label class="control-label col-md-3">Puesto Oficial</label>
               <div class="col-md-9">
-				<input name="puesto_nombre_oficial" placeholder="Puesto Oficial" class="form-control" type="text">
+              <select name="puesto_nombre_oficial" id="puestoRecibe" class="form-control">
+               <?php  foreach ($puestos as $puesto) { ?>
+                <option value="<?php echo $puesto['id_puesto'] ?>"><?php echo $puesto['clave_puesto'] ?></option>
+               <?php } ?>
+            </select>
               </div>
             </div>
             <div class="form-group">
@@ -246,8 +246,8 @@
             </div>
         </form>
      
-            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

@@ -1,14 +1,6 @@
-<div id="page-wrapper" style="min-height: 487px;">
-	<div class="main-page">
-		<h3 class="title1">Mantenimiento de información</h3>
-		<div class="grids widget-shadow">
-			<div class="form-group mb-n">
-        <div class="row">
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/">Usuarios</a>
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/formatos">formatos</a>
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/gerencias">gerencias</a>
-          <a href=" <?php echo base_url();?>MantenimientoRegistros/puestos">puestos</a>
-        </div>
+				<div class="row">
+					<button class="btn" onclick="add_puesto()"><i class="glyphicon glyphicon-plus"></i>Nuevo Puesto</button>
+				</div>
 				<div class="row">
 					<table id="tableUsers" class="table table-striped table-bordered" cellspacing="0" width="100%">
 						<thead>
@@ -19,6 +11,7 @@
 									<th>Descripción</th>
                   <th>Jefe</th>
                   <th>Competencia</th>
+                  <th>Status</th>
                   <th>Acciones</th>
 						</tr>
 						</thead>
@@ -31,8 +24,16 @@
               <td><?php echo $item['descripcion_nivel'];?></td>
               <td><?php echo $item['jefe_puesto'];?></td>
               <td><?php echo $item['competencia_puesto'];?></td>
+              <td>
+                <?php if ($item['status']==='1') {  ?>
+                  <span class="label label-success">Activo</span>
+                <?php }else{ ?>
+                  <span class="label label-danger">Inactivo</span>
+                <?php } ?>
+              </td>
 							<td>
-								<button class="btn btn-warning" onclick="edit_user(<?php echo $item['id_puesto'];?>)">Cambiar Estatus</button>
+								<button class="btn btn-warning" onclick="edit_puesto(<?php echo $item['id_puesto'];?>)"><i class="glyphicon glyphicon-pencil"></i></button>
+                <button class="btn btn-danger" onclick="delete_puesto(<?php echo $item['id_puesto'];?>)"><i class="glyphicon glyphicon-remove"></i></button>
 							</td>
 						</tr>
 					<?php } ?>
@@ -43,8 +44,6 @@
 </div>
 
 
-
-
 <script type="text/javascript">
   $(document).ready( function () {
       $('#tableUsers').DataTable();
@@ -53,38 +52,36 @@
     var table;
  
  
-    function add_user()
+    function add_puesto()
     {
       save_method = 'add';
       $('#form')[0].reset(); // reset form on modals
       $('#modal_form').modal('show'); // show bootstrap modal
     }
  
-    function edit_user(id)
+    function edit_puesto(id)
     {
       save_method = 'update';
       $('#form')[0].reset(); // reset form on modals
  
       //Ajax Load data from ajax
       $.ajax({
-        url : "<?php echo site_url('/MantenimientoRegistros/ajax_edit')?>/" + id,
+        url : "<?php echo site_url('/MantenimientoRegistros/ajax_edit_puesto')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
         {
  
-            $('[name="id_usuario"]').val(data.id_usuario);
-            $('[name="pk_clave_usuario"]').val(data.pk_clave_usuario);
-            $('[name="nombre_usuario"]').val(data.nombre_usuario);
-            $('[name="titulo_usuario"]').val(data.titulo_usuario);
-            $('[name="unidad_usuario"]').val(data.unidad_usuario);
-            $('[name="ingreso_usuario"]').val(data.ingreso_usuario);
-            $('[name="contrato_usuario"]').val(data.contrato_usuario);
-            $('[name="puesto_nombre_oficial"]').val(data.puesto_nombre_oficial);
-            $('[name="nombre_interno_usuario"]').val(data.nombre_interno_usuario);
-            $('[name="iniciales_usuario"]').val(data.iniciales_usuario);
-            $('[name="clave_usuario"]').val(data.clave_usuario);
-            $('[name="area_usuario"]').val(data.area_usuario); 
+            $('[name="id_puesto"]').val(data.id_puesto);
+            $('[name="clave_puesto"]').val(data.clave_puesto);
+            $('[name="nombre_puesto"]').val(data.nombre_puesto);
+            $('[name="area_puesto"]').val(data.area_puesto);
+            $('[name="nivel_puesto"]').val(data.nivel_puesto);
+            $('[name="descripcion_nivel"]').val(data.descripcion_nivel);
+            $('[name="jefe_puesto"]').val(data.jefe_puesto);
+            $('[name="competencia_puesto"]').val(data.competencia_puesto);
+            $('[name="status"]').val(data.status);
+            
  
             $('#modal_form').modal('show'); // show bootstrap modal when complete loaded
             $('.modal-title').text('Modifica Usuario'); // Set title to Bootstrap modal title
@@ -104,11 +101,11 @@
       var url;
       if(save_method == 'add')
       {
-          url = "<?php echo site_url('/MantenimientoRegistros/user_add')?>";
+          url = "<?php echo site_url('/MantenimientoRegistros/puesto_add')?>";
       }
       else
       {
-        url = "<?php echo site_url('/MantenimientoRegistros/user_update')?>";
+        url = "<?php echo site_url('/MantenimientoRegistros/puesto_update')?>";
       }
  
        // ajax adding data to database
@@ -132,13 +129,13 @@
         });
     }
  
-    function delete_user(id)
+    function delete_puesto(id)
     {
-      if(confirm('¿Está seguro de eliminar este usuario?'))
+      if(confirm('¿Está seguro de eliminar este puesto?'))
       {
         // ajax delete data from database
           $.ajax({
-            url : "<?php echo site_url('/MantenimientoRegistros/user_delete')?>/"+id,
+            url : "<?php echo site_url('/MantenimientoRegistros/puesto_delete')?>/"+id,
             type: "POST",
             dataType: "JSON",
             success: function(data)
@@ -155,7 +152,12 @@
       }
     }
 
- 
+  </script>
+  <script>
+  $(document).ready( function () {
+    $('#tableUsers').DataTable();
+  } );
+
   </script>
  
   <!-- Bootstrap modal -->
@@ -164,80 +166,65 @@
     <div class="modal-content">
 	      <div class="modal-header">
 	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	        <h3 class="modal-title">Nuevo Usuario</h3>
+	        <h3 class="modal-title">Nuevo Puesto</h3>
 	      </div>
         <form action="#" id="form" class="form-horizontal">
-           <input type="hidden" value="" name="id_usuario"/> 
+           <input type="hidden" value="" name="id_puesto"/> 
             <div class="form-group">
-              <label class="control-label col-md-3">Clave Usuario</label>
+              <label class="control-label col-md-3">Puestos</label>
               <div class="col-md-9">
-                <input name="pk_clave_usuario" placeholder="Clave Usuario" class="form-control" type="text">
+                <input name="clave_puesto" placeholder="Clave Puesto" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Nombre Usuario</label>
+              <label class="control-label col-md-3">Nombre</label>
               <div class="col-md-9">
-                <input name="nombre_usuario" placeholder="nombre_usuario" class="form-control" type="text">
+                <input name="nombre_puesto" placeholder="nombre_puesto" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Titulo Usuario</label>
+              <label class="control-label col-md-3">Área</label>
               <div class="col-md-9">
-				<input name="titulo_usuario" placeholder="Titulo Usuario" class="form-control" type="text">
+				<input name="area_puesto" placeholder="Área" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Unidad Usuario</label>
+              <label class="control-label col-md-3">Nivel</label>
               <div class="col-md-9">
-				<input name="unidad_usuario" placeholder="Unidad Usuario" class="form-control" type="text">
+				<input name="nivel_puesto" placeholder="Nivel" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Ingreso Usuario</label>
+              <label class="control-label col-md-3">Descripcion</label>
               <div class="col-md-9">
-				<input name="ingreso_usuario" placeholder="Ingreso Usuario" class="form-control" type="text">
+				<input name="descripcion_nivel" placeholder="Descripción" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Contrato Usuario</label>
+              <label class="control-label col-md-3">Jefe Inmediato</label>
               <div class="col-md-9">
-				<input name="contrato_usuario" placeholder="Contrato Usuario" class="form-control" type="text">
+				<input name="jefe_puesto" placeholder="Jefe Inmediato" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Puesto Oficial</label>
+              <label class="control-label col-md-3">Competencia</label>
               <div class="col-md-9">
-				<input name="puesto_nombre_oficial" placeholder="Puesto Oficial" class="form-control" type="text">
+				<input name="competencia_puesto" placeholder="Competencia" class="form-control" type="text">
               </div>
             </div>
             <div class="form-group">
-              <label class="control-label col-md-3">Nombre Interno</label>
+              <label class="control-label col-md-3">Estatus</label>
               <div class="col-md-9">
-				<input name="nombre_interno_usuario" placeholder="Nombre Interno" class="form-control" type="text">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-3">Iniciales</label>
-              <div class="col-md-9">
-				<input name="iniciales_usuario" placeholder="Contrato Usuario" class="form-control" type="text">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-3">Clave</label>
-              <div class="col-md-9">
-				<input name="clave_usuario" placeholder="Clave" class="form-control" type="text">
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="control-label col-md-3">Area</label>
-              <div class="col-md-9">
-				<input name="area_usuario" placeholder="Area" class="form-control" type="text">
+              <select name="status" id="puestoRecibe" class="form-control">
+                <option value="1">Activado</option>
+                <option value="0">Desactivado</option>
+              </select>
               </div>
             </div>
         </form>
      
-            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Save</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+            <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Guardar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

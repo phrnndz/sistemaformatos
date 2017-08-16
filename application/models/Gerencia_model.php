@@ -11,6 +11,11 @@ class Gerencia_model extends CI_Model {
 		parent::__construct();
 		$this->load->database();
 	}
+	public function get_all_gerencias(){
+		$result = $this->db->query('SELECT * FROM gerencias ORDER BY nombre_gerencia ASC');
+		$gerencias = $result->result_array();
+		return $gerencias;
+	}
 	//lista las gerencias
 	public function get_gerencias(){
 		$result = $this->db->query('SELECT * FROM gerencias WHERE status="1" ORDER BY nombre_gerencia ASC');
@@ -35,7 +40,6 @@ class Gerencia_model extends CI_Model {
 		return $formatos;
 	}
 
-	//lista formatos por id de gerencia
 	public function get_formatos(){
 		$result = $this->db->query('SELECT *
 									FROM formatos f
@@ -43,6 +47,26 @@ class Gerencia_model extends CI_Model {
 									ORDER BY f.nombre_formato ASC');
 		$formatos = $result->result_array();
 		return $formatos;
+	}
+
+	public function get_all_formatos(){
+		$result = $this->db->query('SELECT *
+									FROM formatos f
+									ORDER BY f.nombre_formato ASC');
+		$formatos = $result->result_array();
+		return $formatos;
+	}
+
+	public function get_info_by_id($id){
+		$this->db->from('gerencias');
+		$this->db->where('id_gerencia',$id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function gerencia_update($where, $data){
+		$this->db->update('gerencias', $data, $where);
+		return $this->db->affected_rows();
 	}
 
 	

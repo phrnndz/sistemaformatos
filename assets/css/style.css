@@ -778,7 +778,7 @@ ul.dropdown-menu.drp-mnu li {
 	font-weight:700;
 }
 .user-name span {
-    font-size: .75em;
+    font-size: 1em;
     font-style: italic;
     color: #424f63;
     font-weight: normal;
@@ -1841,13 +1841,7 @@ h4.modal-title {
     margin: 0 0 1em;
 }
 /*--tabs --*/
-.nav-tabs {
-    border-bottom: 1px solid #797979;
-}
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    border: 1px solid #797979;
-	border-bottom-color: transparent;
-}
+
 
 .tab-content p {
     font-size: 0.9em;

@@ -10,7 +10,6 @@
 	<script src="<?= base_url('assets/js/scripts.js') ?>"></script>
 	<script src="<?= base_url('assets/js/datepicker.min.js') ?>" ></script>
 	<script src="<?= base_url('assets/js/i18n/datepicker.en.js') ?>" ></script>
-
 	
 </body>
 </html>

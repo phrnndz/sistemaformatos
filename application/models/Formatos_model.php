@@ -59,4 +59,17 @@ class Formatos_model extends CI_Model {
 		$this->db->where('id_historial_formatos', $id_historial_formatos);
     	$this->db->update('historial_formatos', $query);
 	}
+
+	public function get_info_by_id($id){
+		$this->db->from('formatos');
+		$this->db->where('id_formato',$id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
+	public function formato_update($where, $data){
+		$this->db->update('formatos', $data, $where);
+		return $this->db->affected_rows();
+	}
+
 }

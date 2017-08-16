@@ -14,6 +14,8 @@ class MantenimientoRegistros extends CI_Controller {
 		$this->load->model('user_model');
 		$this->load->model('gerencia_model');
 		$this->load->model('puestos_model');
+		$this->load->model('formatos_model');
+
 
 
 	}
@@ -25,6 +27,8 @@ class MantenimientoRegistros extends CI_Controller {
 			if ($_SESSION['clave_usuario'] =='GDHO') {
 				$this->load->view('header');
 				$datos['usuarios'] = $this->user_model->get_all_users();
+				$datos['puestos'] = $this->puestos_model->get_puestos();
+				$this->load->view('user/admin/header_lista_informacion.php');
 				$this->load->view('user/admin/lista_informacion_usuarios.php', $datos);
 				$this->load->view('footer');
 			}
@@ -32,6 +36,13 @@ class MantenimientoRegistros extends CI_Controller {
 			redirect('/login');
 		}
 	}
+
+
+	/**
+	 * 
+	 * USUARIOS
+	 * 
+	 */
 
 	public function user_add(){
 		$data = array(
@@ -56,6 +67,7 @@ class MantenimientoRegistros extends CI_Controller {
 		echo json_encode($data);
 	}
 
+
 	public function user_update(){
 		$data = array(
 				'pk_clave_usuario' => $this->input->post('pk_clave_usuario'),
@@ -79,13 +91,20 @@ class MantenimientoRegistros extends CI_Controller {
 		$this->user_model->delete_by_id($id);
 		echo json_encode(array("status" => TRUE));
 	}
+
+	/**
+	 * 
+	 * FORMATOS
+	 * 
+	 */
 	
 	public function formatos(){
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			//MEnú Solo para DHO
 			if ($_SESSION['clave_usuario'] =='GDHO') {
 				$this->load->view('header');
-				$datos['formatos'] = $this->gerencia_model->get_formatos();
+				$datos['formatos'] = $this->gerencia_model->get_all_formatos();
+				$this->load->view('user/admin/header_lista_informacion.php');
 				$this->load->view('user/admin/lista_informacion_formatos.php', $datos);
 				$this->load->view('footer');
 			}
@@ -94,13 +113,34 @@ class MantenimientoRegistros extends CI_Controller {
 		}
 	}
 
+	public function ajax_edit_formato($id){
+		$data = $this->formatos_model->get_info_by_id($id);
+		echo json_encode($data);
+	}
+
+	public function formato_update(){
+		$data = array(
+				'id_formato' => $this->input->post('id_formato'),
+				'status' => $this->input->post('status')
+			);
+		$this->formatos_model->formato_update(array('id_formato' => $this->input->post('id_formato')), $data);
+		echo json_encode(array("status" => TRUE));
+	}
+
+
+	/**
+	 * 
+	 * GERENCIAS
+	 * 
+	 */
 
 	public function gerencias(){
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			//MEnú Solo para DHO
 			if ($_SESSION['clave_usuario'] =='GDHO') {
 				$this->load->view('header');
-				$datos['gerencias'] = $this->gerencia_model->get_gerencias();
+				$datos['gerencias'] = $this->gerencia_model->get_all_gerencias();
+				$this->load->view('user/admin/header_lista_informacion.php');
 				$this->load->view('user/admin/lista_informacion_gerencias.php', $datos);
 				$this->load->view('footer');
 			}
@@ -109,6 +149,27 @@ class MantenimientoRegistros extends CI_Controller {
 		}
 	}
 
+	public function ajax_edit_gerencia($id){
+		$data = $this->gerencia_model->get_info_by_id($id);
+		echo json_encode($data);
+	}
+
+	public function gerencia_update(){
+		$data = array(
+				'id_gerencia' => $this->input->post('id_gerencia'),
+				'status' => $this->input->post('status')
+			);
+		$this->gerencia_model->gerencia_update(array('id_gerencia' => $this->input->post('id_gerencia')), $data);
+		echo json_encode(array("status" => TRUE));
+	}
+
+
+
+	/**
+	 * 
+	 * PUESTOS
+	 * 
+	 */
 
 	public function puestos(){
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
@@ -116,6 +177,7 @@ class MantenimientoRegistros extends CI_Controller {
 			if ($_SESSION['clave_usuario'] =='GDHO') {
 				$this->load->view('header');
 				$datos['gerencias'] = $this->puestos_model->get_puestos();
+				$this->load->view('user/admin/header_lista_informacion.php');
 				$this->load->view('user/admin/lista_informacion_puestos.php', $datos);
 				$this->load->view('footer');
 			}
@@ -124,5 +186,49 @@ class MantenimientoRegistros extends CI_Controller {
 		}
 	}
 
+
+	public function puesto_add(){
+		$data = array(
+				'id_puesto' => $this->input->post('id_puesto'),
+				'clave_puesto' => $this->input->post('clave_puesto'),
+				'nombre_puesto' => $this->input->post('nombre_puesto'),
+				'area_puesto' => $this->input->post('area_puesto'),
+				'nivel_puesto' => $this->input->post('nivel_puesto'),
+				'descripcion_nivel' => $this->input->post('descripcion_nivel'),
+				'jefe_puesto' => $this->input->post('jefe_puesto'),
+				'competencia_puesto' => $this->input->post('competencia_puesto'),
+				'status' => $this->input->post('status')
+			);
+		$insert = $this->puestos_model->puesto_add($data);
+		echo json_encode(array("status" => TRUE));
+	}
+
+	public function ajax_edit_puesto($id){
+		$data = $this->puestos_model->get_info_by_id($id);
+		echo json_encode($data);
+	}
+
+
+	public function puesto_update(){
+		$data = array(
+				'id_puesto' => $this->input->post('id_puesto'),
+				'clave_puesto' => $this->input->post('clave_puesto'),
+				'nombre_puesto' => $this->input->post('nombre_puesto'),
+				'area_puesto' => $this->input->post('area_puesto'),
+				'nivel_puesto' => $this->input->post('nivel_puesto'),
+				'descripcion_nivel' => $this->input->post('descripcion_nivel'),
+				'jefe_puesto' => $this->input->post('jefe_puesto'),
+				'competencia_puesto' => $this->input->post('competencia_puesto'),
+				'status' => $this->input->post('status')
+			);
+		$this->puestos_model->puesto_update(array('id_puesto' => $this->input->post('id_puesto')), $data);
+		echo json_encode(array("status" => TRUE));
+	}
+
+	public function puesto_delete($id)
+	{
+		$this->puestos_model->delete_by_id($id);
+		echo json_encode(array("status" => TRUE));
+	}
 
 }
