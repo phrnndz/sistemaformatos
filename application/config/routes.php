@@ -54,6 +54,7 @@ $route['login'] = 'user/login';
 $route['logout'] = 'user/logout';
 $route['admin'] = 'admin/index';
 
+
 $route['default_controller'] = 'forum';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

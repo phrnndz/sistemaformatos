@@ -2,25 +2,16 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
- * User class.
+ * Pamela Hernández
  * 
  * @extends CI_Controller
  */
 class User extends CI_Controller {
-
-	/**
-	 * __construct function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
 	public function __construct() {
-		
 		parent::__construct();
 		$this->load->library(array('session'));
 		$this->load->helper(array('url'));
-		$this->load->model('user_model');
-		
+		$this->load->model('user_model');	
 	}
 	
 	
@@ -29,91 +20,96 @@ class User extends CI_Controller {
 	}
 
 	public function login() {
-		
-		// create the data object
-		$data = new stdClass();
-		
-		// load form helper and validation library
-		$this->load->helper('form');
-		$this->load->library('form_validation');
-		
-		// set validation rules
-		$this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric');
-		$this->form_validation->set_rules('password', 'Password', 'required');
-		
-		if ($this->form_validation->run() == false) {
-			
-			// validation not ok, send validation errors to the view
-			$this->load->view('header');
-			$this->load->view('user/login/login');
-			$this->load->view('footer');
-			
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			//redirigir a admin si ya estas logueado
+			redirect('admin');
 		} else {
+			// create the data object
+			$data = new stdClass();
 			
-			// set variables from the form
-			$username = $this->input->post('username');
-			$password = $this->input->post('password');
+			// load form helper and validation library
+			$this->load->helper('form');
+			$this->load->library('form_validation');
 			
-			if ($this->user_model->resolve_user_login($username, $password)) {
+			// set validation rules
+			$this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric');
+			$this->form_validation->set_rules('password', 'Password', 'required');
+			$this->form_validation->set_message('password', 'Error Message');
+			
+			if ($this->form_validation->run() == false) {
 				
-				$user_id = $this->user_model->get_user_id_from_username($username);
-				$user    = $this->user_model->get_user($user_id);
-				
-				// set session user datas
-				$_SESSION['user_id']      = (int)$user->id;
-				$_SESSION['username']     = (string)$user->username;
-				$_SESSION['logged_in']    = (bool)true;
-				
-				redirect('/admin');
-				// user login ok
+				// validation not ok, send validation errors to the view
+				$this->load->view('header');
+				$this->load->view('user/login/login');
+				$this->load->view('footer');
 				
 			} else {
 				
-				// login failed
-				$data->error = 'Usuario o contraseña incorrectos.';
+				// seteo de variables de form
+				$username = $this->input->post('username');
+				$password = $this->input->post('password');
 				
-				// send error to the view
-				$this->load->view('header');
-				$this->load->view('user/login/login', $data);
-				$this->load->view('footer');
+				if ($this->user_model->resolve_user_login($username, $password)) {
+					
+					$user_id = $this->user_model->get_user_id_from_username($username);
+					$user    = $this->user_model->get_user($user_id);
+					// $userrol = $this->user_model->get_rol($user->rol_usuario);
+					
+					// seteo de sesión
+					$_SESSION['id_usuario']      			= (int)$user->id_usuario;
+					$_SESSION['pk_clave_usuario']     		= (string)$user->pk_clave_usuario;
+					$_SESSION['clave_usuario']     			= (string)$user->clave_usuario;
+					$_SESSION['nombre_usuario']    			= (string)$user->nombre_usuario;
+					$_SESSION['puesto_nombre_oficial']     	= (string)$user->puesto_nombre_oficial;
+					$_SESSION['fecha_inicio_laboral']		= (string)$user->ingreso_usuario;
+					$_SESSION['logged_in']    				= (bool)true;
+					
+					redirect('/admin');
+					// user login ok
+					
+				} else {
+					
+					// login fallo
+					$data->error = 'Usuario o contraseña incorrectos.';
+					
+					// Envia error
+					$this->load->view('header');
+					$this->load->view('user/login/login', $data);
+					$this->load->view('footer');
+					
+				}
 				
 			}
-			
 		}
 		
 	}
 	
-	/**
-	 * logout function.
-	 * 
-	 * @access public
-	 * @return void
-	 */
 	public function logout() {
 		
-		// create the data object
+		// data object
 		$data = new stdClass();
 		
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			
-			// remove session datas
+			// limpia sesion
 			foreach ($_SESSION as $key => $value) {
 				unset($_SESSION[$key]);
 			}
 			
-			// user logout ok
+			// comprueba logout correcto
 			$this->load->view('header');
 			$this->load->view('user/logout/logout_success', $data);
 			$this->load->view('footer');
 			
 		} else {
 			
-			// there user was not logged in, we cannot logged him out,
-			// redirect him to site root
+			// 
+			// redirect al root
 			redirect('/');
 			
 		}
 		
 	}
+
 	
 }

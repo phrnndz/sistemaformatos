@@ -15,19 +15,195 @@ class Admin extends CI_Controller {
 	 * @return void
 	 */
 	public function __construct() {
-		
 		parent::__construct();
 		$this->load->library(array('session'));
+		$this->load->library('form_validation');
+		$this->load->helper(array('form'));
 		$this->load->helper(array('url'));
-		
+		$this->load->model('gerencia_model');
+		$this->load->model('puestos_model');
+		$this->load->model('formatos_model');
+		$this->load->helper('numeros');
 	}
 	
-	
+	//Vista principal
 	public function index() {
-		$this->load->view('header');
-		$this->load->view('admin/admin_principal');
-		$this->load->view('footer');
+		//si estas logueado
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			$this->load->view('header');
+			// Lista las solicitudes pendientes para el usuario logueado
+			$datos['solicitudes'] = $this->formatos_model->get_solicitudes($_SESSION['pk_clave_usuario']);
+			// Lista de solicitudes enviadas , aceptadas y rechazadas
+			$datos['solicitudesAcep'] = $this->formatos_model->get_solicitudes_usuario_aceptadas($_SESSION['pk_clave_usuario']);
+			$datos['solicitudesPend'] = $this->formatos_model->get_solicitudes_usuario_pendientes($_SESSION['pk_clave_usuario']);
+			$datos['solicitudesRech'] = $this->formatos_model->get_solicitudes_usuario_rechazadas($_SESSION['pk_clave_usuario']);
+			// Lista todas las gerencias
+			$datos['gerencias'] = $this->gerencia_model->get_gerencias();
+			$this->load->view('admin/admin_lista_gerencias', $datos);
+			$this->load->view('footer');
+		} else {
+			redirect('/login');
+		}
 	}
 
-	
+	//lista de formatos por gerencia
+	public function Gerencia($slug_gerencia){
+		//si estas logueado
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			$this->load->view('header');
+			$datos['formatos'] = $this->gerencia_model->get_gerencia_formatos($slug_gerencia);
+			$this->load->view('admin/admin_lista_formatos', $datos);
+			$this->load->view('footer');
+		} else {
+			redirect('/login');
+		}
+	}
+
+	public function GerenciaDHO($slug_formato){
+		//si logueado
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			$this->load->view('header');
+
+			//consulta a models
+			$datos['directivos'] = $this->puestos_model->get_nombre_de_directivos();
+			$datos['puestos'] = $this->puestos_model->get_puestos();
+			$datos['infoFormato'] = $slug_formato;
+
+			//obtiene validaciones de forms de acuerdo al formato requisitado
+			switch ($slug_formato) {
+				case 'solicitud_de_vacaciones_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
+					$this->form_validation->set_rules('fechaSolicitudInicio', 'fechaSolicitudInicio', 'required');
+					$this->form_validation->set_rules('fechaSolicitudTermino', 'fechaSolicitudTermino', 'required');
+					break;
+				case 'solicitud_prestamo_laboral_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
+					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
+					$this->form_validation->set_rules('montoSolicitado', 'montoSolicitado', 'required');
+					$this->form_validation->set_rules('numeroCatorcenas', 'numeroCatorcenas', 'required');
+					$this->form_validation->set_rules('tipoImprevisto', 'tipoImprevisto', 'required');
+					$this->form_validation->set_rules('fechaPrestamo', 'fechaPrestamo', 'required');
+					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
+					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					break;
+
+				case 'solicitud_de_fondo_ahorro_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
+					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
+					$this->form_validation->set_rules('fechaSolicitudInicio', 'fechaSolicitudInicio', 'required');
+					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
+					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					break;
+				
+				default:
+				
+					break;
+			}
+
+			if ($this->form_validation->run() == FALSE){
+                $this->load->view('formato/GDHO/form_'.$slug_formato, $datos);
+            }
+            else{
+            	//si form pasa validacion revisar datos
+            	$data['datos'] = $this->input->post();
+            	// Obtener nombre de la persona que recibe el formato
+            	$data['destinatario'] = $this->puestos_model->get_nombre_directivo_por_clave($data['datos']['claveRecibe']);
+				$this->load->view('generaPDF/revisa_solicitud', $data);
+            }
+			
+			$this->load->view('footer');
+		} else {
+			redirect('/login');
+		}
+		
+	}
+
+	//funcion que guarda datos de los form
+	public function guardaDatos(){
+		//si estas logueado
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			$this->load->view('header');
+            	$data['datos'] = $this->input->get();
+            	// var_dump ($data['datos']);
+            	// exit();
+				$queryString = $_SERVER['QUERY_STRING'];
+				$query = array(
+				   'id_historial_formatos' => NULL ,
+				   'slug_formato' 	=> 	$data['datos']['formatoRequisitado'],
+				   'nombre_usuario'	=> 	$data['datos']['nombreEmpleado'],
+				   'clave_usuario' 	=> 	$data['datos']['claveUsuario'],
+				   'clave_remitente'=>	$data['datos']['claveUsuario'],
+				   'clave_destino' 	=>	$data['datos']['claveRecibe'],
+				   'puesto_destino' =>	$data['datos']['puestoRecibe'],
+				   'get' 			=> 	$queryString,
+				   'status'			=>	'P',
+				   'fecha'			=> 	'NOW()'
+				);
+
+				$this->formatos_model->guarda_historial($query);
+				$this->load->view('generaPDF/autorizacion_pendiente', $data);
+			$this->load->view('footer');
+		} else {
+			redirect('/login');
+		}
+	}
+
+
+	//Muestra la solicitud y manda a la vista el id_historial_formatos para cambiar status
+	public function revisaSolicitud($id_historial_formatos){
+		//si estas logueado
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			$datos['idSolicitud'] = $id_historial_formatos;
+			$this->load->view('header');
+			$this->load->view('generaPDF/revisa_datos',$datos);
+			$this->load->view('footer');
+		} else {
+			redirect('/login');
+		}
+	}
+
+	// Muestra un formato por GET
+	// $data es el nombre del formato
+	public function showIframe($data){
+		$this->load->view('formato/GDHO/'.$data);
+	}
+
+	// Renderiza formato por GET-
+	// $data es el nombre del formato
+	public function showPDF($data){
+		$templateFile = $this->load->view('formato/GDHO/'.$data);
+		$html = $this->output->get_output();
+		ob_start();
+		$contents = ob_get_clean(); 
+		if ($contents !== false)
+		{
+			$options = new Dompdf\Options();
+			$options->set('isRemoteEnabled', TRUE);
+			$options->set('isJavascriptEnabled', TRUE);
+			$dompdf = new Dompdf\Dompdf($options);
+			$dompdf->load_html($html);
+			$dompdf->render();
+			$dompdf->stream($_SESSION['nombre_usuario'] .".pdf");
+		}
+	}	
+
+	// Actualizar el estado de una solicitud por POST
+	public function actualizaStatus(){
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			$data['datos'] = $this->input->post();
+			$this->load->view('header');
+			$this->formatos_model->actualizaSolicitud($data);
+			$this->load->view('generaPDF/formato_confirmacion',$data);
+			$this->load->view('footer');
+		} else {
+			redirect('/login');
+		}
+
+	}
 }

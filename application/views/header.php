@@ -14,10 +14,16 @@
 	<link href="<?= base_url('assets/css/bootstrap.css') ?>" rel="stylesheet">
 	<link href="<?= base_url('assets/css/style.css') ?>" rel="stylesheet">
 	<link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet">
+	<link href="<?= base_url('assets/css/datepicker.min.css') ?>" rel="stylesheet" type="text/css">
+	<link href="<?= base_url('assets/css/paginador.css') ?>" rel="stylesheet">
 
-	<link href="<?= base_url('assets/js/jquery-1.11.1.min.js') ?>" rel="stylesheet">
-	<link href="<?= base_url('assets/js/modernizr.custom.js') ?>" rel="stylesheet">
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<link href="<?= base_url('assets/js/modernizr.custom.js') ?>" >
+	<script src="<?= base_url('assets/js/paginador.js') ?>"></script>
+
+    <!-- Include English language -->
+	<script src="https://use.fontawesome.com/ce3806c1b4.js"></script>
 	<!--webfonts-->
 	<link href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
 	<!--[if lt IE 9]>
@@ -32,7 +38,7 @@
 				<!--toggle button end-->
 				<!--logo -->
 				<div class="logo">
-					<a href="index.html">
+					<a href="<?= base_url('admin') ?>">
 						<h1>SACIMEX</h1>
 						<span>Sistema de formatos</span>
 					</a>
@@ -42,9 +48,10 @@
 			<div class="header-right">
 				<div class="user-name">
 					<p>
-						<?php if (isset($_SESSION['username']) && $_SESSION['logged_in'] === true) : ?>
-							<a href="<?= base_url('logout') ?>">Logout</a> 
-							<span><?php echo "<br>".$_SESSION['username'];  ?></span>
+						<?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) : ?>
+							<a href="<?= base_url('logout') ?>">Salir</a> <br>
+							<span><?php echo $_SESSION['nombre_usuario'];  ?></span> <br>
+							<span><?php echo $_SESSION['puesto_nombre_oficial']; ?></span>
 						<?php else : ?>
 							<a href="<?= base_url('login') ?>">Login</a>
 						<?php endif; ?>

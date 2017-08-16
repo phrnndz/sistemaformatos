@@ -919,6 +919,7 @@ h4.title {
 }
 .table.stats-table {
     margin-bottom: 0;
+    background-color: #e8f5e9;
 }
 .stats-table span.label{
     font-weight: 500;
@@ -1204,6 +1205,9 @@ h3.hdg {
 }
 section#tables  p {
  margin-top: 1em;
+}
+.grid_box1 {
+    margin-bottom: 2em;
 }
 @media (max-width:768px){
 .grid_3 {
@@ -2777,9 +2781,6 @@ div#vmap {
 .social-media {
     width: 38%;
     float: left;
-}
-.grid_box1 {
-    margin-bottom: 1em;
 }
 .example_6, .media_1 {
     margin: 1.5em 0 0 0;
