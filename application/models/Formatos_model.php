@@ -50,11 +50,13 @@ class Formatos_model extends CI_Model {
 	}
 
 	public function actualizaSolicitud($data){
-		$status = $data['datos']['status'];
-		$id_historial_formatos = (int)$data['datos']['idSolicitud'];
+		$id_historial_formatos 	= (int)$data['datos']['idSolicitud'];
+		$status 				= $data['datos']['status'];
+		$comentario_revisor 	= $data['datos']['comentario_revisor'];
 		$query = array(
 				'id_historial_formatos' => $id_historial_formatos ,
-				'status' 				=> 	$status
+				'status' 				=> 	$status,
+				'comentario_revisor' 	=> 	$comentario_revisor
 				);
 		$this->db->where('id_historial_formatos', $id_historial_formatos);
     	$this->db->update('historial_formatos', $query);

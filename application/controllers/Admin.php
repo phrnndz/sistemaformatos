@@ -100,6 +100,10 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
 					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
 					break;
+
+				case 'formulario_de_salida_sacimex_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					break;
 				
 				default:
 				

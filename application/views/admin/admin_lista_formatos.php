@@ -1,6 +1,6 @@
 <div id="page-wrapper" style="min-height: 487px;">
 			<div class="main-page">
-				<h3 class="title1">Departamentos</h3>
+				<h3 class="title1">Formatos</h3>
 				<?php //var_dump($formatos); exit(); ?>
 				<div class="grids widget-shadow">
 					<div class="form-group mb-n">
