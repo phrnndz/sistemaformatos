@@ -33,9 +33,19 @@
 </div>
 
 <script>
-	  $(document).ready( function () {
-	    $('#tableUsers').DataTable();
-	  } );
+    $(document).ready( function () {
+      $('#tableUsers').DataTable( {
+        "language": {
+            "lengthMenu": "Mostrando _MENU_ registros por pagina",
+            "zeroRecords": "No se ha encontrado nada",
+            "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No se ha encontrado nada",
+            "infoFiltered": "(filtrando de un total de _MAX_ )",
+            "search": "Buscar"
+        }
+      }
+      );
+    } );
 
 </script>
 

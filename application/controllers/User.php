@@ -32,7 +32,7 @@ class User extends CI_Controller {
 			$this->load->library('form_validation');
 			
 			// set validation rules
-			$this->form_validation->set_rules('username', 'Username', 'required|alpha_numeric');
+			$this->form_validation->set_rules('username', 'Username', 'required');
 			$this->form_validation->set_rules('password', 'Password', 'required');
 			$this->form_validation->set_message('password', 'Error Message');
 			
@@ -51,18 +51,19 @@ class User extends CI_Controller {
 				
 				if ($this->user_model->resolve_user_login($username, $password)) {
 					
-					$user_id = $this->user_model->get_user_id_from_username($username);
-					$user    = $this->user_model->get_user($user_id);
-					// $userrol = $this->user_model->get_rol($user->rol_usuario);
+					//$user_id = $this->user_model->get_user_id_from_username($username);
+					$user   = $this->user_model->get_user($username);
 					
 					// seteo de sesión
-					$_SESSION['id_usuario']      			= (int)$user->id_usuario;
-					$_SESSION['pk_clave_usuario']     		= (string)$user->pk_clave_usuario;
-					$_SESSION['clave_usuario']     			= (string)$user->clave_usuario;
-					$_SESSION['nombre_usuario']    			= (string)$user->nombre_usuario;
-					$_SESSION['puesto_nombre_oficial']     	= (string)$user->puesto_nombre_oficial;
-					$_SESSION['fecha_inicio_laboral']		= (string)$user->ingreso_usuario;
+					$_SESSION['badgenumber']      			= (int)$user[0]['badgenumber'];
+					$_SESSION['pk_clave_usuario']     		= (int)$user[0]['badgenumber'];
+					$_SESSION['clave_usuario']     			= (string)$user[0]['clave_usuario'];
+					$_SESSION['nombre_usuario']    			= (string)$user[0]['nombre_usuario'];
+					$_SESSION['titulo_interno_usuario']    	= (string)$user[0]['titulo_interno_usuario'];
+					$_SESSION['puesto_nombre']     			= (string)$user[0]['clave_puesto'];
+					$_SESSION['fecha_contratacion']			= (string)$user[0]['ingreso_usuario'];
 					$_SESSION['logged_in']    				= (bool)true;
+					
 					
 					redirect('/admin');
 					// user login ok

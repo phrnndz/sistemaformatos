@@ -15,52 +15,31 @@ class MantenimientoRegistros extends CI_Controller {
 		$this->load->model('gerencia_model');
 		$this->load->model('puestos_model');
 		$this->load->model('formatos_model');
-
-
-
+		$this->load->model('vacaciones_model');
 	}
 	
 	
 	public function index() {
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			//MEnú Solo para DHO
-			if ($_SESSION['clave_usuario'] =='GDHO') {
+			
 				$this->load->view('header');
 				$datos['usuarios'] = $this->user_model->get_all_users();
 				$datos['puestos'] = $this->puestos_model->get_puestos();
 				$this->load->view('user/admin/header_lista_informacion.php');
 				$this->load->view('user/admin/lista_informacion_usuarios.php', $datos);
 				$this->load->view('footer');
-			}
+			
 		} else {
 			redirect('/login');
 		}
 	}
 
-
 	/**
 	 * 
 	 * USUARIOS
 	 * 
-	 */
-
-	public function user_add(){
-		$data = array(
-				'pk_clave_usuario' => $this->input->post('pk_clave_usuario'),
-				'nombre_usuario' => $this->input->post('nombre_usuario'),
-				'titulo_usuario' => $this->input->post('titulo_usuario'),
-				'unidad_usuario' => $this->input->post('unidad_usuario'),
-				'ingreso_usuario' => $this->input->post('ingreso_usuario'),
-				'contrato_usuario' => $this->input->post('contrato_usuario'),
-				'puesto_nombre_oficial' => $this->input->post('puesto_nombre_oficial'),
-				'nombre_interno_usuario' => $this->input->post('nombre_interno_usuario'),
-				'iniciales_usuario' => $this->input->post('iniciales_usuario'),
-				'clave_usuario' => $this->input->post('clave_usuario'),
-				'area_usuario' => $this->input->post('area_usuario'),
-			);
-		$insert = $this->user_model->user_add($data);
-		echo json_encode(array("status" => TRUE));
-	}
+	**/
 
 	public function ajax_edit($id){
 		$data = $this->user_model->get_info_by_id($id);
@@ -69,20 +48,27 @@ class MantenimientoRegistros extends CI_Controller {
 
 
 	public function user_update(){
-		$data = array(
-				'pk_clave_usuario' => $this->input->post('pk_clave_usuario'),
+			$data = array(
+				'badgenumber' => $this->input->post('badgenumber'),
 				'nombre_usuario' => $this->input->post('nombre_usuario'),
 				'titulo_usuario' => $this->input->post('titulo_usuario'),
-				'unidad_usuario' => $this->input->post('unidad_usuario'),
+				'area_usuario' => $this->input->post('area_usuario'),
 				'ingreso_usuario' => $this->input->post('ingreso_usuario'),
-				'contrato_usuario' => $this->input->post('contrato_usuario'),
-				'puesto_nombre_oficial' => $this->input->post('puesto_nombre_oficial'),
-				'nombre_interno_usuario' => $this->input->post('nombre_interno_usuario'),
+				'fecha_contratacion' => $this->input->post('fecha_contratacion'),
+				'titulo_interno_usuario'=>$this->input->post('titulo_interno_usuario'),
 				'iniciales_usuario' => $this->input->post('iniciales_usuario'),
 				'clave_usuario' => $this->input->post('clave_usuario'),
 				'area_usuario' => $this->input->post('area_usuario'),
+				'anios_antiguedad' => $this->input->post('anios_antiguedad'),
+				'dias_por_ley' => $this->input->post('dias_por_ley'),
+				'dias_usados' => $this->input->post('dias_usados'),
+				'dias_por_usar' => $this->input->post('dias_por_usar'),
+				'estatus_prima_vacacional' => $this->input->post('estatus_prima_vacacional'),
+				'fecha_pago_prima_vacacional' => $this->input->post('fecha_pago_prima_vacacional')
+
 			);
-		$this->user_model->user_update(array('id_usuario' => $this->input->post('id_usuario')), $data);
+
+		$this->user_model->user_update(array('badgenumber' => $this->input->post('badgenumber')), $data);
 		echo json_encode(array("status" => TRUE));
 	}
 
@@ -228,6 +214,46 @@ class MantenimientoRegistros extends CI_Controller {
 	public function puesto_delete($id)
 	{
 		$this->puestos_model->delete_by_id($id);
+		echo json_encode(array("status" => TRUE));
+	}
+
+
+	/**
+	 * 
+	 * VACACIONES
+	 * 
+	 */
+
+	public function vacaciones(){
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			//MEnú Solo para DHO
+				$this->load->view('header');
+				$datos['vacaciones'] = $this->vacaciones_model->get_vacaciones();
+				$this->load->view('user/admin/header_lista_informacion.php');
+				$this->load->view('user/admin/lista_informacion_vacaciones.php', $datos);
+				$this->load->view('footer');
+
+		} else {
+			redirect('/login');
+		}
+	}
+
+	public function ajax_edit_vacaciones($id){
+		$data = $this->vacaciones_model->get_info_by_id($id);
+		echo json_encode($data);
+	}
+
+	public function vacaciones_update(){
+		$data = array(
+				'badgenumber' => $this->input->post('badgenumber'),
+				'periodo_1_inicio' => $this->input->post('periodo_1_inicio'),
+				'periodo_1_termino' => $this->input->post('periodo_1_termino'),
+				'periodo_2_inicio' => $this->input->post('periodo_2_inicio'),
+				'periodo_2_termino' => $this->input->post('periodo_2_termino'),
+				'periodo_3_inicio' => $this->input->post('periodo_3_inicio'),
+				'periodo_3_termino' => $this->input->post('periodo_3_termino'),
+		);
+		$this->vacaciones_model->vacaciones_update(array('badgenumber' => $this->input->post('badgenumber')), $data);
 		echo json_encode(array("status" => TRUE));
 	}
 

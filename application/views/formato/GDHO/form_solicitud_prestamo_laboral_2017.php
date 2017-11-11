@@ -21,31 +21,31 @@
 				        <?php //echo form_error('nombreEmpleado'); ?>
 
 						<label for="nombreEmpleado">Tu nombre</label>
-				        <input type="text" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>"> 
+				        <input type="text" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>" readonly> 
 					</div> 
 					<div class="form-group">
 						<label for="fechaInicioLaboral">¿Desde cuando laboras en SACIMEX?</label>
-						<input type='text' name="fechaInicioLaboral" id="fechaInicioLaboral" data-language="en" class="form-control" placeholder="00/00/00" value="<?php echo $_SESSION['fecha_inicio_laboral']; ?>" />
+						<input type='text' name="fechaInicioLaboral" id="fechaInicioLaboral" data-language="en" class="form-control" placeholder="00/00/00" value="<?php echo $_SESSION['fecha_contratacion']; ?>" readonly />
 					</div>
 					<div class="form-group">
 						<label for="puestoTrabajo">¿Cuál es tu puesto de trabajo?</label>
-				        <input type="text" name="puestoTrabajo" id="puestoTrabajo" class="form-control"  value="<?php echo $_SESSION['puesto_nombre_oficial']; ?>">
+				        <input type="text" name="puestoTrabajo" id="puestoTrabajo" class="form-control"  value="<?php echo $_SESSION['puesto_nombre']; ?> " readonly>
 					</div><br>
 					<h3>Del préstamo</h3>
 					<hr>
 					<div class="form-group">
 
 						<label for="montoSolicitado">Monto Solicitado</label> 
-						<input type='number' name="montoSolicitado" id="montoSolicitado" placeholder="1000" class="form-control" />    
+						<input type='number' name="montoSolicitado" id="montoSolicitado" placeholder="1000" class="form-control" value="<?php echo set_value('montoSolicitado'); ?>" />    
 					</div>
 					<div class="form-group">
 						<label for="numeroCatorcenas">Número de catorcenas para realizar el pago (mínimo 1, máximo 20)</label>
-						<input type='number' name="numeroCatorcenas" id="numeroCatorcenas" placeholder="5"  min="1" max="20" class="form-control" />    	
+						<input type='number' name="numeroCatorcenas" id="numeroCatorcenas" placeholder="5"  min="1" max="20" class="form-control" <?php echo set_value('numeroCatorcenas'); ?>/>    	
 					</div>
-					<input type="hidden" name="ultimaRetencion" id="ultimaRetencion"> 
+					<input type="hidden" name="ultimaRetencion" id="ultimaRetencion" value="<?php echo set_value('ultimaRetencion'); ?>"> 
 					<div class="form-group">
 						<label for="montoRetencion">Cantidad de retención de sueldo</label>
-						<input type='number' name="montoRetencion" id="montoRetencion" placeholder="Ejemplo: $350" class="form-control" />    
+						<input type='number' name="montoRetencion" id="montoRetencion" placeholder="Ejemplo: $350" class="form-control" value="<?php echo set_value('montoRetencion'); ?>" />    
 					</div>
 
 					<table id="vorschlaege" class="table stats-table "> 
@@ -65,8 +65,7 @@
 					<div class="form-group">
 						<label for="tipoImprevisto">Tipo de Imprevisto</label>
 						<select name="tipoImprevisto" id="tipoImprevisto" class="form-control">
-							<option value=""></option>
-							<option value="Trámites o licencias">Trámites o licencias</option>
+							<option value="Trámites o licencias" selected="">Trámites o licencias</option>
 							<option value="Un proyecto productivo">Un proyecto productivo</option>
 							<option value="Gastos escolares">Gastos escolares</option>
 							<option value="Enfermedad propia">Enfermedad propia</option>
@@ -77,13 +76,13 @@
 					</div>
 					<div class="form-group">
 						<label for="fechaPrestamo">Fecha requeria del préstamo</label>
-						<input type='text' name="fechaPrestamo" id="fechaPrestamo" data-language="en" class="form-control" placeholder="00/00/00"/>
+						<input type='text' name="fechaPrestamo" id="fechaPrestamo" data-language="en" class="form-control" placeholder="00/00/00" value="<?php echo set_value('fechaPrestamo'); ?>" />
 					</div>
 					<div class="form-group">
 						<label for="nombreRecibe">Jefe inmediato</label>
 						<select name="claveRecibe" id="claveRecibe" class="form-control">
 							 <?php  foreach ($directivos as $directivo) { ?>
-								<option value="<?php echo $directivo['pk_clave_usuario'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
+								<option value="<?php echo $directivo['badgenumber'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
 							 <?php } ?>
 						</select>
 					</div>
@@ -101,7 +100,7 @@
 						<label for="nombreRecibe">¿Quién lo recibe?</label>
 						<select name="claveRecibe" id="claveRecibe" class="form-control">
 							 <?php  foreach ($directivos as $directivo) { ?>
-								<option value="<?php echo $directivo['pk_clave_usuario'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
+								<option value="<?php echo $directivo['titulo_interno_usuario'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
 							 <?php } ?>
 						</select>
 					</div>
@@ -128,9 +127,7 @@
 <!-- scripts detallados  -->
 	<script>
 	$( document ).ready(function() {
-		// Initialization
-		$('#fechaInicioLaboral').datepicker({
-		});
+		// Initializacion
 		$('#fechaPrestamo').datepicker({
 		});
 

@@ -16,6 +16,8 @@ class Admin extends CI_Controller {
 	 */
 	public function __construct() {
 		parent::__construct();
+		date_default_timezone_set('America/Mexico_City');
+		//carga de modelos
 		$this->load->library(array('session'));
 		$this->load->library('form_validation');
 		$this->load->helper(array('form'));
@@ -34,9 +36,9 @@ class Admin extends CI_Controller {
 			// Lista las solicitudes pendientes para el usuario logueado
 			$datos['solicitudes'] = $this->formatos_model->get_solicitudes($_SESSION['pk_clave_usuario']);
 			// Lista de solicitudes enviadas , aceptadas y rechazadas
-			$datos['solicitudesAcep'] = $this->formatos_model->get_solicitudes_usuario_aceptadas($_SESSION['pk_clave_usuario']);
-			$datos['solicitudesPend'] = $this->formatos_model->get_solicitudes_usuario_pendientes($_SESSION['pk_clave_usuario']);
-			$datos['solicitudesRech'] = $this->formatos_model->get_solicitudes_usuario_rechazadas($_SESSION['pk_clave_usuario']);
+			$datos['solicitudesAcep'] = $this->formatos_model->get_solicitudes_usuario_aceptadas($_SESSION['badgenumber']);
+			$datos['solicitudesPend'] = $this->formatos_model->get_solicitudes_usuario_pendientes($_SESSION['badgenumber']);
+			$datos['solicitudesRech'] = $this->formatos_model->get_solicitudes_usuario_rechazadas($_SESSION['badgenumber']);
 			// Lista todas las gerencias
 			$datos['gerencias'] = $this->gerencia_model->get_gerencias();
 			$this->load->view('admin/admin_lista_gerencias', $datos);
@@ -71,6 +73,14 @@ class Admin extends CI_Controller {
 
 			//obtiene validaciones de forms de acuerdo al formato requisitado
 			switch ($slug_formato) {
+				case 'llamada_de_atencion_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
+					$this->form_validation->set_rules('irregularidadTexto', 'irregularidadTexto', 'required');
+					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
+					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					break;
 				case 'solicitud_de_vacaciones_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
 					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
@@ -103,6 +113,20 @@ class Admin extends CI_Controller {
 
 				case 'formulario_de_salida_sacimex_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
+					$this->form_validation->set_rules('motivos[]', 'motivos[]', 'required');
+					$this->form_validation->set_rules('tiempo', 'tiempo', 'required');
+					$this->form_validation->set_rules('ambiente', 'ambiente', 'required');
+					$this->form_validation->set_rules('reglamentos', 'reglamentos', 'required');
+					$this->form_validation->set_rules('beneficios', 'beneficios', 'required');
+					$this->form_validation->set_rules('carga', 'carga', 'required');
+					$this->form_validation->set_rules('carrera', 'carrera', 'required');
+					$this->form_validation->set_rules('expectativas', 'expectativas', 'required');
+					$this->form_validation->set_rules('objetivos', 'objetivos', 'required');
+					$this->form_validation->set_rules('reconocimiento', 'reconocimiento', 'required');
+					$this->form_validation->set_rules('salario', 'salario', 'required');
+					$this->form_validation->set_rules('valores', 'valores', 'required');
+
 					break;
 				
 				default:
@@ -116,8 +140,28 @@ class Admin extends CI_Controller {
             else{
             	//si form pasa validacion revisar datos
             	$data['datos'] = $this->input->post();
+
+
+
+            	//INICIO Formateo de Array exclusivo para formulario_de_salida_sacimex_2017
+            	if ($data['datos']['formatoRequisitado'] =='formulario_de_salida_sacimex_2017') {
+            		foreach ($data['datos']['motivos'] as $key => $valor) {
+            			$field = 'motivos'.$key;     
+            			$data['datos'][$field] = $valor;       		
+            		}
+            		//contador
+            		$data['datos']['motivoskey']= count($data['datos']['motivos']);
+            		//elimina el array del array
+            		unset($data['datos']['motivos']);
+            	}
+            	//FIN Formateo de Array exclusivo para formulario_de_salida_sacimex_2017
+
+
+
             	// Obtener nombre de la persona que recibe el formato
             	$data['destinatario'] = $this->puestos_model->get_nombre_directivo_por_clave($data['datos']['claveRecibe']);
+            	$data['puesto'] = $this->puestos_model->get_nombre_puesto_por_clave($data['datos']['puestoRecibe']);
+            	// Obtener nombre de la persona que recibe el formato
 				$this->load->view('generaPDF/revisa_solicitud', $data);
             }
 			
@@ -132,11 +176,10 @@ class Admin extends CI_Controller {
 	public function guardaDatos(){
 		//si estas logueado
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-			$this->load->view('header');
+				$this->load->view('header');
             	$data['datos'] = $this->input->get();
-            	// var_dump ($data['datos']);
-            	// exit();
 				$queryString = $_SERVER['QUERY_STRING'];
+				$now = date('Y-m-d H:i:s');
 				$query = array(
 				   'id_historial_formatos' => NULL ,
 				   'slug_formato' 	=> 	$data['datos']['formatoRequisitado'],
@@ -147,7 +190,7 @@ class Admin extends CI_Controller {
 				   'puesto_destino' =>	$data['datos']['puestoRecibe'],
 				   'get' 			=> 	$queryString,
 				   'status'			=>	'P',
-				   'fecha'			=> 	'NOW()'
+				   'fecha'			=> 	$now
 				);
 
 				$this->formatos_model->guarda_historial($query);

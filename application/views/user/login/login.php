@@ -21,12 +21,12 @@
 			</div>
 			<?= form_open() ?>
 				<div class="form-group">
-					<label for="username">Usuario</label>
-					<input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu usuario">
+					<label for="username">ID de usuario</label>
+					<input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu ID">
 				</div>
 				<div class="form-group">
-					<label for="password">Clave</label>
-					<input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu clave">
+					<label for="password">Contraseña</label>
+					<input type="password" class="form-control" id="password" name="password" placeholder="Ingresa tu contraseña">
 				</div>
 				<div class="form-group">
 					<input type="submit" class="btn btn-default" value="Aceptar">

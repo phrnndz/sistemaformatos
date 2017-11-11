@@ -3,7 +3,6 @@
 						<thead>
 						<tr>
 									<th>Nombre</th>
-                  <th>Slug</th>
                   <th>Estatus</th>
 									<th>Acciones</th>
 						</tr>
@@ -12,7 +11,6 @@
 					<?php  foreach ($formatos as $item) { ?>
  						<tr>
 							<td><?php echo $item['nombre_formato'];?></td>
-							<td><?php echo $item['slug_formato'];?></td>
               <td>
                 <?php if ($item['status']==='1') {  ?>
                   <span class="label label-success">Activo</span>
@@ -33,7 +31,17 @@
 
 <script>
 	  $(document).ready( function () {
-	    $('#tableUsers').DataTable();
+	    $('#tableUsers').DataTable( {
+        "language": {
+            "lengthMenu": "Mostrando _MENU_ registros por pagina",
+            "zeroRecords": "No se ha encontrado nada",
+            "info": "Mostrando pagina _PAGE_ de _PAGES_",
+            "infoEmpty": "No se ha encontrado nada",
+            "infoFiltered": "(filtrando de un total de _MAX_ )",
+            "search": "Buscar"
+        }
+      }
+      );
 	  } );
 
 </script>

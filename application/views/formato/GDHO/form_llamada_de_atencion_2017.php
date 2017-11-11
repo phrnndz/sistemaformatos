@@ -9,44 +9,28 @@
 				
 				<?php echo validation_errors(); ?>
 
-				<?php echo form_open('admin/GerenciaDHO/solicitud_de_vacaciones_2017'); ?> 
+				<?php echo form_open('admin/GerenciaDHO/llamada_de_atencion_2017'); ?> 
 
 				<div class="form-body">
 					<!-- Campos ocultos -->
 					<h3>Remitente</h3>
 					<hr>
 					<input type="hidden" name="formatoRequisitado" value="<?php echo $infoFormato; ?>" />
-
 					<div class="form-group"> 
-				        <?php //echo form_error('nombreEmpleado'); ?>
-
-						<label for="nombreEmpleado">Tu nombre</label>
 				        <input type="text" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>" readonly> 
 					</div> 
 					<div class="form-group">
-						<?php //echo form_error('fechaInicioLaboral'); ?>
-
-						<label for="fechaInicioLaboral">¿Desde cuando laboras en SACIMEX?</label>
-						<input type='text' name="fechaInicioLaboral" id="fechaInicioLaboral" data-language="en" class="form-control" placeholder="00/00/00" value="<?php echo $_SESSION['fecha_contratacion']; ?>" readonly/>
-					</div>
-					<div class="form-group">
-						<label for="puestoTrabajo">¿Cuál es tu puesto de trabajo?</label>
 				        <input type="text" name="puestoTrabajo" id="puestoTrabajo" class="form-control"  value="<?php echo $_SESSION['puesto_nombre']; ?>" readonly>
 					</div>
-					<div class="form-group">
-						<?php //echo form_error('fechaSolicitudInicio'); ?>
-						<?php //echo form_error('fechaSolicitudTermino'); ?>
-
-						<label for="fechaSolicitudInicio">Retiro del total de mi fondo de ahorro</label> 
-					   del   
-						<input type='text' name="fechaSolicitudInicio" id="fechaSolicitudInicio" data-language="en" placeholder="00/00/00" value="<?php echo set_value('fechaSolicitudInicio'); ?>" />   al   
-						<input type='text' name="fechaSolicitudTermino" id="fechaSolicitudTermino" data-language="en" placeholder="00/00/00" value="<?php echo set_value('fechaSolicitudTermino'); ?>" />
-						
-					</div><br>
+					<br><br>
 					<h3>Destinatario</h3>
 					<hr>
 					<div class="form-group">
-						<label for="claveRecibe">¿Quién lo recibe?</label>
+						<label for="irregularidadTexto">Irregularidades incurridas</label>
+						<textarea name="irregularidadTexto" id="irregularidadTexto" cols="50" rows="4" class="form-control"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="nombreRecibe">¿Quién lo recibe?</label>
 						<select name="claveRecibe" id="claveRecibe" class="form-control">
 							 <?php  foreach ($directivos as $directivo) { ?>
 								<option value="<?php echo $directivo['badgenumber'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
@@ -60,7 +44,8 @@
 								<option value="<?php echo $puesto['id_puesto'] ?>"><?php echo $puesto['clave_puesto'] ?></option>
 							 <?php } ?>
 						</select>
-					</div><br><br>
+					</div>
+
 					<button type="submit" class="btn btn-default">Continuar</button> 
 					<?php echo form_close(); ?> 
 				</div>
@@ -76,12 +61,6 @@
 	$( document ).ready(function() {
 		// Initialization
 		$('#fechaInicioLaboral').datepicker({
-			dateFormat: 'yyyy/mm/dd',
-		});
-		$('#fechaSolicitudInicio').datepicker({
-			dateFormat: 'yyyy/mm/dd',
-		});
-		$('#fechaSolicitudTermino').datepicker({
 			dateFormat: 'yyyy/mm/dd',
 		});
 

@@ -49,6 +49,15 @@ class Formatos_model extends CI_Model {
 		return $solicitud;
 	}
 
+	public function get_historial_por_usuario($clave_usuario){
+		$result = $this->db->query('	SELECT * FROM historial_formatos 
+							WHERE clave_remitente="'.$clave_usuario.'" 
+							OR clave_destino="'.$clave_usuario.'"');
+		$historial = $result->result_array();
+		return $historial;
+	}
+
+
 	public function actualizaSolicitud($data){
 		$id_historial_formatos 	= (int)$data['datos']['idSolicitud'];
 		$status 				= $data['datos']['status'];

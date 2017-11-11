@@ -21,17 +21,17 @@
 				        <?php //echo form_error('nombreEmpleado'); ?>
 
 						<label for="nombreEmpleado">Tu nombre</label>
-				        <input type="text" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>"> 
+				        <input type="text" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>" readonly> 
 					</div> 
 					<div class="form-group">
 						<?php //echo form_error('fechaInicioLaboral'); ?>
 
 						<label for="fechaInicioLaboral">¿Desde cuando laboras en SACIMEX?</label>
-						<input type='text' name="fechaInicioLaboral" id="fechaInicioLaboral" data-language="en" class="form-control" placeholder="00/00/00" value="<?php echo $_SESSION['fecha_inicio_laboral']; ?>"/>
+						<input type='text' name="fechaInicioLaboral" id="fechaInicioLaboral" data-language="en" class="form-control" placeholder="00/00/00" value="<?php echo $_SESSION['fecha_contratacion']; ?>" readonly/>
 					</div>
 					<div class="form-group">
 						<label for="puestoTrabajo">¿Cuál es tu puesto de trabajo?</label>
-				        <input type="text" name="puestoTrabajo" id="puestoTrabajo" class="form-control"  value="<?php echo $_SESSION['puesto_nombre_oficial']; ?>">
+				        <input type="text" name="puestoTrabajo" id="puestoTrabajo" class="form-control"  value="<?php echo $_SESSION['puesto_nombre']; ?>" readonly>
 					</div>
 					<div class="form-group">
 						<?php //echo form_error('fechaSolicitudInicio'); ?>
@@ -39,8 +39,8 @@
 
 						<label for="fechaInicioLaboral">Fecha de solicitud de vacaciones</label> 
 					   del   
-						<input type='text' name="fechaSolicitudInicio" id="fechaSolicitudInicio" data-language="en" placeholder="00/00/00" />   al   
-						<input type='text' name="fechaSolicitudTermino" id="fechaSolicitudTermino" data-language="en" placeholder="00/00/00" />
+						<input type='text' name="fechaSolicitudInicio" id="fechaSolicitudInicio" data-language="en" placeholder="00/00/00" value="<?php echo set_value('fechaSolicitudInicio'); ?>" />   al   
+						<input type='text' name="fechaSolicitudTermino" id="fechaSolicitudTermino" data-language="en" placeholder="00/00/00"  value="<?php echo set_value('fechaSolicitudTermino'); ?>" />
 						
 					</div><br>
 					<h3>Destinatario</h3>
@@ -49,7 +49,7 @@
 						<label for="nombreRecibe">¿Quién lo recibe?</label>
 						<select name="claveRecibe" id="claveRecibe" class="form-control">
 							 <?php  foreach ($directivos as $directivo) { ?>
-								<option value="<?php echo $directivo['pk_clave_usuario'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
+								<option value="<?php echo $directivo['badgenumber'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
 							 <?php } ?>
 						</select>
 					</div>
@@ -74,10 +74,6 @@
 <!-- scripts detallados  -->
 	<script>
 	$( document ).ready(function() {
-		// Initialization
-		$('#fechaInicioLaboral').datepicker({
-			dateFormat: 'yyyy/mm/dd',
-		});
 		$('#fechaSolicitudInicio').datepicker({
 			minDate: new Date(),
 			dateFormat: 'yyyy/mm/dd',

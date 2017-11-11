@@ -17,5 +17,8 @@
               <li>
                 <a href="<?php echo base_url();?>MantenimientoRegistros/puestos" >Puestos</a>
               </li>
+              <li>
+                <a href="<?php echo base_url();?>MantenimientoRegistros/vacaciones" >Administracion Vacaciones</a>
+              </li>
           </ul>
         </div>

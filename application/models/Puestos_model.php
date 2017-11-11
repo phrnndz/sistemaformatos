@@ -12,9 +12,11 @@ class Puestos_model extends CI_Model {
 		$this->load->database();
 
 	}
+
+	//exclusivo de llenado de formatos
 	public function get_nombre_de_directivos(){
-		$this->db->select('*');
-		$this->db->from('usuarios');
+		$this->db->select('badgenumber,titulo_interno_usuario');
+		$this->db->from('new_usuarios');
 		$this->db->order_by('titulo_interno_usuario', 'ASC');
 		$result = $this->db->get();
 		$personal = $result->result_array();
@@ -32,13 +34,21 @@ class Puestos_model extends CI_Model {
 
 	public function get_nombre_directivo_por_clave($pk_clave_usuario){
 		$this->db->select('titulo_interno_usuario');
-		$this->db->from('usuarios');
-		$this->db->where('pk_clave_usuario', $pk_clave_usuario);
+		$this->db->from('new_usuarios');
+		$this->db->where('badgenumber', $pk_clave_usuario);
 		$result = $this->db->get();
 		$directivo = $result->result_array();
 		return $directivo;
 	}
 
+	public function get_nombre_puesto_por_clave($id_puesto){
+		$this->db->select('clave_puesto');
+		$this->db->from('puestos');
+		$this->db->where('id_puesto', $id_puesto);
+		$result = $this->db->get();
+		$puesto = $result->result_array();
+		return $puesto;
+	}
 
 
 	// CRUD DE MANTENIMIENTO DE REGISTROS

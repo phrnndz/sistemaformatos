@@ -8,7 +8,7 @@
 	<title>SACIMEX - SISTEMA DE FORMATOS</title>
 	<meta name="description" content="">
 	<meta name="keywords" content="">
-	<meta name="author" content="">
+	<meta name="author" content="Pamela Hernandez">
 
 	<!-- css -->
 	<link href="<?= base_url('assets/css/bootstrap.css') ?>" rel="stylesheet">
@@ -47,7 +47,7 @@
 						<?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) : ?>
 							<a href="<?= base_url('logout') ?>">Salir</a> <br>
 							<span><?php echo $_SESSION['nombre_usuario'];  ?></span> <br>
-							<span><?php echo $_SESSION['puesto_nombre_oficial']; ?></span>
+							<span><?php echo $_SESSION['puesto_nombre']; ?></span>
 						<?php else : ?>
 							<a href="<?= base_url('login') ?>">Login</a>
 						<?php endif; ?>
@@ -56,4 +56,7 @@
 				</div>
 			</div>
 		</div>
-		
+<!-- 		<div class="header-section ">
+			<a href="admin">Inicio</a>
+		</div>
+		 -->

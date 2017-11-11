@@ -14,25 +14,29 @@ class User_model extends CI_Model {
 	}
 	
 	public function resolve_user_login($username, $userpassword) {
-		$this->db->select('password');
-		$this->db->from('usuarios');
-		$this->db->where('pk_clave_usuario', $username);
-		$password = $this->db->get()->row('password');
+		$this->db->select('new_password');
+		$this->db->from('userinfo');
+		$this->db->where('badgenumber', $username);
+		$password = $this->db->get()->row('new_password');
 		return $this->verifica_passwoord($password, $userpassword);
 		
 	}
 	
-	public function get_user_id_from_username($username) {
-		$this->db->select('id_usuario');
-		$this->db->from('usuarios');
+	/*public function get_user_id_from_username($username) {
+		$this->db->select('badgenumber');
+		$this->db->from('userinfo');
 		$this->db->where('pk_clave_usuario', $username);
 		return $this->db->get()->row('id_usuario');
 	}
-
-	public function get_user($user_id) {
-		$this->db->from('usuarios');
-		$this->db->where('id_usuario', $user_id);
-		return $this->db->get()->row();
+*/
+	public function get_user($badgenumber) {
+		$result = $this->db->query('SELECT *
+									FROM userinfo U 
+									JOIN new_usuarios NU ON U.badgenumber=NU.badgenumber
+									JOIN puestos P ON NU.id_puesto = P.id_puesto
+									WHERE U.badgenumber="'.$badgenumber.'"');
+		$user = $result->result_array();
+		return $user;
 	}
 
 	private function verifica_passwoord($password, $userpassword) {	
@@ -43,11 +47,22 @@ class User_model extends CI_Model {
 		}
 	}
 
+/*	public function get_nombre_por_id($id){
+		
+	}
+
+	public function get_nombre_puesto_por_id($id){
+
+	}*/
+
 
 	// CRUD DE MANTENIMIENTO DE REGISTROS
 	public function get_all_users(){
-		$this->db->from('usuarios');
-		$result= $this->db->get();
+		$result= $this->db->query('	SELECT * 
+									FROM userinfo U 
+									JOIN new_usuarios NU ON U.badgenumber=NU.badgenumber
+									JOIN puestos P 
+									ON NU.id_puesto = P.id_puesto');
 		$usuarios = $result->result_array();
 		return $usuarios;
 	}
@@ -57,20 +72,20 @@ class User_model extends CI_Model {
 	}
 
 	public function get_info_by_id($id){
-		$this->db->from('usuarios');
-		$this->db->where('id_usuario',$id);
+		$this->db->from('new_usuarios');
+		$this->db->where('badgenumber',$id);
 		$query = $this->db->get();
 		return $query->row();
 	}
 
 	public function user_update($where, $data){
-		$this->db->update('usuarios', $data, $where);
+		$this->db->update('new_usuarios', $data, $where);
 		return $this->db->affected_rows();
 	}
 
 	public function delete_by_id($id){
-		$this->db->where('id_usuario', $id);
-		$this->db->delete('usuarios');
+		$this->db->where('badgenumber', $id);
+		$this->db->delete('new_usuarios');
 	}
 }
 
