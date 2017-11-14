@@ -8,9 +8,11 @@
 						<tr>
 							<th rowspan="2">Badgenumber</th>
               <th rowspan="2">Nombre</th>
-              <th colspan="2" >Perdiodo 1</th>
-              <th colspan="2" >Perdiodo 2</th>
-              <th colspan="2" >Perdiodo 3</th>
+              <th colspan="2" >Permiso 1 (2 dias máximo)</th>
+              <th colspan="2" >Permiso 2 (2 dias máximo)</th>
+              <th colspan="2" >Vacaciones 1</th>
+              <th colspan="2" >Vacaciones 2</th>
+              <th colspan="2" >Vacaciones 3</th>
               <th>Antiguedad</th>
               <th>Acciones</th>
 						</tr>
@@ -25,19 +27,28 @@
               <td><strong>Termina </strong></td>
               <td><strong>Inicia </strong> </td>
               <td><strong>Termina </strong></td>
+              <td><strong>Inicia </strong> </td>
+              <td><strong>Termina </strong></td>
+              <td><strong>Inicia </strong> </td>
+              <td><strong>Termina </strong></td>
               <td></td>
               <td></td>
             </tr>
           <?php  foreach ($vacaciones as $item) { ?>
             <tr>
               <td><?php echo $item['badgenumber']; ?></td>
-              <td><?php echo $item['nombre_usuario']; ?></td>
-              <td><?php echo $item['periodo_1_inicio'];?></td>
-              <td><?php echo $item['periodo_1_termino'];?></td>
-              <td><?php echo $item['periodo_2_inicio'];?></td>
-              <td><?php echo $item['periodo_2_termino'];?></td>
-              <td><?php echo $item['periodo_3_inicio'];?></td>
-              <td><?php echo $item['periodo_3_termino'];?></td>
+              <td><?php echo $item['nombre_usuario']; ?> </td>
+              <td> <small> <?php echo $item['permiso_periodo_1_inicio'];?> </small></td>
+              <td> <small> <?php echo $item['permiso_periodo_1_termino'];?> </small></td>
+              <td> <small> <?php echo $item['permiso_periodo_2_inicio'];?> </small></td>
+              <td> <small> <?php echo $item['permiso_periodo_2_termino'];?> </small></td>
+
+              <td> <small> <?php echo $item['vacaciones_periodo_1_inicio'];?> </small></td>
+              <td> <small> <?php echo $item['vacaciones_periodo_1_termino'];?> </small></td>
+              <td> <small> <?php echo $item['vacaciones_periodo_2_inicio'];?> </small></td>
+              <td> <small> <?php echo $item['vacaciones_periodo_2_termino'];?> </small></td>
+              <td> <small> <?php echo $item['vacaciones_periodo_3_inicio'];?> </small></td>
+              <td> <small> <?php echo $item['vacaciones_periodo_3_termino'];?> </small> </td>
               <td><?php echo $item['anios_antiguedad']; ?> años</td>
               <td>
                 <button class="btn btn-warning" onclick="edit_vacacaciones(<?php echo $item['badgenumber'];?>)"><i class="glyphicon glyphicon-pencil"></i></button>
@@ -88,9 +99,9 @@
         {
             // JSON.stringify(data);
             $('[name="badgenumber"]').val(data.badgenumber);
-            $('[name="periodo_1_inicio"]').val(data.periodo_1_inicio);
-            $('[name="periodo_1_termino"]').val(data.periodo_1_termino);
-            var flag= validaEditable(data.periodo_1_inicio,data.periodo_1_termino);
+            $('[name="periodo_1_inicio"]').val(data.vacaciones_periodo_1_inicio);
+            $('[name="periodo_1_termino"]').val(data.vacaciones_periodo_1_termino);
+            var flag= validaEditable(data.vacaciones_periodo_1_inicio,data.vacaciones_periodo_1_termino);
             if(flag===true){
               $('[name="periodo_1_inicio"]').prop('readonly', true);
               $('[name="periodo_1_termino"]').prop('readonly', true);
@@ -103,9 +114,9 @@
 
 
 
-            $('[name="periodo_2_inicio"]').val(data.periodo_2_inicio);
-            $('[name="periodo_2_termino"]').val(data.periodo_2_termino);
-            var flag= validaEditable(data.periodo_2_inicio,data.periodo_2_termino);
+            $('[name="periodo_2_inicio"]').val(data.vacaciones_periodo_2_inicio);
+            $('[name="periodo_2_termino"]').val(data.vacaciones_periodo_2_termino);
+            var flag= validaEditable(data.vacaciones_periodo_2_inicio,data.vacaciones_periodo_2_termino);
             if(flag===true){
               $('[name="periodo_2_inicio"]').prop('readonly', true);
               $('[name="periodo_2_termino"]').prop('readonly', true);
@@ -117,9 +128,9 @@
 
 
 
-            $('[name="periodo_3_inicio"]').val(data.periodo_3_inicio);
-            $('[name="periodo_3_termino"]').val(data.periodo_3_termino);
-            var flag= validaEditable(data.periodo_3_inicio,data.periodo_3_termino);
+            $('[name="periodo_3_inicio"]').val(data.vacaciones_periodo_3_inicio);
+            $('[name="periodo_3_termino"]').val(data.vacaciones_periodo_3_termino);
+            var flag= validaEditable(data.vacaciones_periodo_3_inicio,data.vacaciones_periodo_3_termino);
             if(flag===true){
               $('[name="periodo_3_inicio"]').prop('readonly', true);
               $('[name="periodo_3_termino"]').prop('readonly', true);

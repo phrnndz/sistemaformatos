@@ -25,6 +25,8 @@ class Admin extends CI_Controller {
 		$this->load->model('gerencia_model');
 		$this->load->model('puestos_model');
 		$this->load->model('formatos_model');
+		$this->load->model('vacaciones_model');
+
 		$this->load->helper('numeros');
 	}
 	
@@ -66,10 +68,11 @@ class Admin extends CI_Controller {
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			$this->load->view('header');
 
+			$datos['infoFormato'] 		= $slug_formato;
 			//consulta a models
-			$datos['directivos'] = $this->puestos_model->get_nombre_de_directivos();
-			$datos['puestos'] = $this->puestos_model->get_puestos();
-			$datos['infoFormato'] = $slug_formato;
+			$datos['directivos'] 		= $this->puestos_model->get_nombre_de_directivos();
+			$datos['puestos'] 			= $this->puestos_model->get_puestos();
+			$datos['infoVacaciones']	= $this->vacaciones_model->get_info_by_id($_SESSION['badgenumber']);
 
 			//obtiene validaciones de forms de acuerdo al formato requisitado
 			switch ($slug_formato) {
@@ -176,13 +179,18 @@ class Admin extends CI_Controller {
 	public function guardaDatos(){
 		//si estas logueado
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-				$this->load->view('header');
-            	$data['datos'] = $this->input->get();
-				$queryString = $_SERVER['QUERY_STRING'];
 				$now = date('Y-m-d H:i:s');
+				//capta datos de form
+            	$data['datos'] = $this->input->get();
+            	
+            	//capta variable GET
+				$queryString = $_SERVER['QUERY_STRING'];
+
+				//que formato se requisito
+				$formatoRequisitado = 	$data['datos']['formatoRequisitado'];
 				$query = array(
 				   'id_historial_formatos' => NULL ,
-				   'slug_formato' 	=> 	$data['datos']['formatoRequisitado'],
+				   'slug_formato' 	=> 	$formatoRequisitado,
 				   'nombre_usuario'	=> 	$data['datos']['nombreEmpleado'],
 				   'clave_usuario' 	=> 	$data['datos']['claveUsuario'],
 				   'clave_remitente'=>	$data['datos']['claveUsuario'],
@@ -193,9 +201,13 @@ class Admin extends CI_Controller {
 				   'fecha'			=> 	$now
 				);
 
+
 				$this->formatos_model->guarda_historial($query);
+
+				//carga vista
+				$this->load->view('header');
 				$this->load->view('generaPDF/autorizacion_pendiente', $data);
-			$this->load->view('footer');
+				$this->load->view('footer');
 		} else {
 			redirect('/login');
 		}
