@@ -2,7 +2,7 @@
 	<div class="main-page">
 		<div class="forms">
 		
-			<?php if ($validaMostrarForm == TRUE) //valida si el formato está disponible { ?>
+			<?php if ($validaMostrarForm == TRUE) { //valida si el formato está disponib  ?>
 				<h3 class="title1">Añade tus datos</h3>
 				<div class="form-grids row widget-shadow"> 
 					<div class="form-title">
