@@ -70,8 +70,8 @@ class Admin extends CI_Controller {
 
 			$datos['infoFormato'] 		= $slug_formato;
 			//consulta a models
-			$datos['directivos'] 		= $this->puestos_model->get_nombre_de_directivos();
-			$datos['puestos'] 			= $this->puestos_model->get_puestos();
+			//$datos['directivos'] 		= $this->puestos_model->get_nombre_de_directivos();
+			//$datos['puestos'] 			= $this->puestos_model->get_puestos();
 			$datos['infoVacaciones']	= $this->vacaciones_model->get_info_by_id($_SESSION['badgenumber']);
 
 			//obtiene validaciones de forms de acuerdo al formato requisitado
@@ -139,6 +139,31 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
 					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
 					$this->form_validation->set_rules('permisoPeriodo1','permisoPeriodo1','required');
+					
+					//Validacion de días para permiso  a cuenta de vacaciones
+					$diasLey		= 	$datos['infoVacaciones']->diasLey;
+					$diasUsados 	= 	$datos['infoVacaciones']->diasPermisoUsados1
+										+$datos['infoVacaciones']->diasPermisoUsados2
+										+$datos['infoVacaciones']->diasUsados1
+										+$datos['infoVacaciones']->diasUsados2
+										+$datos['infoVacaciones']->diasUsados3;
+					$diasDomingos 	=	$datos['infoVacaciones']->domingos1
+										+$datos['infoVacaciones']->domingos2
+										+$datos['infoVacaciones']->domingos3;
+					//Los dias domingos no se cuentan, es por eso que se restan los domingos a la cantidad total de días
+					$datos['diasUsadosTotal'] = $diasUsados-$diasDomingos;
+					//A los dias por ley se le restan los usados
+					$datos['diasLibresTotal'] = $diasLey-($diasUsados-$diasDomingos);
+					//Bandera que me dice si mostrar o no el formulario en funcion a los permisos que tiene disponibles
+					if ($datos['infoVacaciones']->diasPermisoUsados1 != 0 && $datos['infoVacaciones']->diasPermisoUsados2 != 0) {
+						$datos['validaMostrarForm'] = FALSE;
+					}else{
+						$datos['validaMostrarForm']	= TRUE;
+					}
+
+
+
+
 				
 				default:
 				
