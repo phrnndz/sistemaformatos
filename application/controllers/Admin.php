@@ -131,6 +131,14 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('valores', 'valores', 'required');
 
 					break;
+				case 'permiso_a_cuenta_de_vacaciones_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
+					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
+					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
+					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					$this->form_validation->set_rules('permisoPeriodo1','permisoPeriodo1','required');
 				
 				default:
 				
@@ -264,5 +272,12 @@ class Admin extends CI_Controller {
 			redirect('/login');
 		}
 
+	}
+
+	//populate selects
+	public function populatePuesto($badgenumber){
+        $data['query']= $this->puestos_model->get_puesto_by_badgenumber($badgenumber);
+        echo json_encode($data);
+        
 	}
 }

@@ -47,14 +47,6 @@ class User_model extends CI_Model {
 		}
 	}
 
-/*	public function get_nombre_por_id($id){
-		
-	}
-
-	public function get_nombre_puesto_por_id($id){
-
-	}*/
-
 
 	// CRUD DE MANTENIMIENTO DE REGISTROS
 	public function get_all_users(){
@@ -87,5 +79,7 @@ class User_model extends CI_Model {
 		$this->db->where('badgenumber', $id);
 		$this->db->delete('new_usuarios');
 	}
+
+
 }
 

@@ -13,14 +13,8 @@
 
 				<div class="form-body">
 					<!-- Campos ocultos -->
-					<?php 
-
-						foreach($infoVacaciones as $dias){
-							echo $dias[0];
-						}
-
-					 ?>
-					<h3>Dias por usar: </h3>
+					<h3>Hola <?php  echo $_SESSION['nombre_usuario']; ?></h3>
+					<p>Te informamos que por ley te corresponden <?php echo $infoVacaciones->diasLey; ?> dias de descanso, esto debido a que tu antiguedad es  <?php echo $infoVacaciones->anios_antiguedad; ?> años</p>
 					<hr>
 					<input type="hidden" name="formatoRequisitado" value="<?php echo $infoFormato; ?>" />
 
@@ -48,11 +42,11 @@
 						<?php //echo form_error('fechaSolicitudInicio'); ?>
 						<?php //echo form_error('fechaSolicitudTermino'); ?>
 
-						<label for="fechaSolicitudInicio">Fecha de permiso</label>   
-						<input type='text' name="fechaSolicitudInicio" id="fechaSolicitudInicio" data-language="en" placeholder="00/00/00" value="" />
+						<label for="permisoPeriodo1">Fecha de permiso</label>   
+						<input type='text' name="permisoPeriodo1" id="permisoPeriodo1" data-language="en" placeholder="00/00/00" value="" />
 						<br>
-						<label for="fechaInicioLaboral" id="labelFechaTermino">Fecha de permiso</label>     
-						<input type='text' name="fechaSolicitudTermino" id="fechaSolicitudTermino" data-language="en" placeholder="00/00/00"  value="1900-01-00" />
+						<label for="permisoPeriodo2" id="labelpermisoPeriodo2">Fecha de permiso</label>     
+						<input type='text' name="permisoPeriodo2" id="permisoPeriodo2" data-language="en" placeholder="00/00/00"  value="1900-01-00" />
 					</div><br>
 					<h3>Destinatario</h3>
 					<hr>
@@ -66,43 +60,75 @@
 					</div>
 					<div class="form-group">
 						<label for="puestoRecibe">Puesto de trabajo a quien va dirigido</label>
-						<select name="puestoRecibe" id="puestoRecibe" class="form-control">
-							 <?php  foreach ($puestos as $puesto) { ?>
-								<option value="<?php echo $puesto['id_puesto'] ?>"><?php echo $puesto['clave_puesto'] ?></option>
-							 <?php } ?>
+						<select name="puestoRecibe" id="puestoRecibe" class="form-control" readonly>
+								<option value=""></option>
 						</select>
 					</div><br><br>
 					<button type="submit" class="btn btn-default">Continuar</button> 
 					<?php echo form_close(); ?> 
+
+					<?php var_dump($infoVacaciones) ?>
 				</div>
 			</div>
 		</div>
-
-<?php 
-var_dump($infoVacaciones);
- ?>
 	</div>
 </div>
+
+
 
 <!-- scripts detallados  -->
 	<script>
 	$( document ).ready(function() {
-		$('#fechaSolicitudTermino').hide();
-		$('#labelFechaTermino').hide();
+		$('#permisoPeriodo2').hide();
+		$('#labelpermisoPeriodo2').hide();
 
 		$('#checkbox').click(function() {
-		  $('#fechaSolicitudTermino')[this.checked ? "show" : "hide"]();
-		  $('#labelFechaTermino')[this.checked ? "show" : "hide"]();
+		  $('#permisoPeriodo2')[this.checked ? "show" : "hide"]();
+		  $('#labelpermisoPeriodo2')[this.checked ? "show" : "hide"]();
 		});
 
-		$('#fechaSolicitudInicio').datepicker({
+		$('#permisoPeriodo1').datepicker({
 			minDate: new Date(),
 			dateFormat: 'yyyy/mm/dd',
 		});
-		$('#fechaSolicitudTermino').datepicker({
+		$('#permisoPeriodo2').datepicker({
 			minDate: new Date(),
 			dateFormat: 'yyyy/mm/dd',
 		});
 
 	});
+	</script>
+
+<!-- scripts detallados  -->
+	<script>
+	$( document ).ready(function() {
+		// Initialization
+		var id = $('#claveRecibe').val();
+	    populate_submenu(id);
+		$( "#claveRecibe" ).change(function() {
+	       	var id = $('#claveRecibe').val();
+	        populate_submenu(id);
+	       });
+
+	});
+	</script>
+
+	<script>
+	function populate_submenu(id) {
+	  $('#puestoRecibe').empty();
+	  $('#puestoRecibe').append("<option>Loading ....</option>");
+	  $.ajax({
+	    type: "GET",
+	    url: "<?php echo site_url('admin/populatePuesto')?>/" + id,
+	    dataType: 'json',
+	    success: function(data) {
+	    	console.log('hola pamela');
+	    	console.log(JSON.stringify(data));
+	      $('#puestoRecibe').empty();
+		    $.each(data, function(key, value) {
+		        $('#puestoRecibe').append('<option value="'+ value.id_puesto +'">'+ value.clavepuesto +'</option>');
+		    });
+		}//termina success
+	  });}
+
 	</script>

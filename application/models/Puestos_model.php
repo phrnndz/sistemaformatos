@@ -80,5 +80,19 @@ class Puestos_model extends CI_Model {
 		$this->db->delete('puestos');
 	}
 
+
+
+	//POPULATE DROPDOWNS
+	public function get_puesto_by_badgenumber($badgenumber){
+		$query= $this->db->query("SELECT 
+							new.id_puesto
+							,pue.id_puesto
+							,pue.clave_puesto AS clavepuesto
+							FROM
+							new_usuarios new
+							join puestos pue ON new.id_puesto=pue.id_puesto
+							WHERE new.badgenumber=".$badgenumber);
+		return $query->row();
+	}
 }
 

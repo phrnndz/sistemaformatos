@@ -79,40 +79,60 @@
 </script>
 
 <script type="text/javascript">
-  $(document).ready( function () {
-      $('#tableUsers').DataTable();
-  } );
+    $(document).ready( function () {
+        $('#tableUsers').DataTable();
+    } );
 
-    var save_method; //for save method string
+    var save_method; 
     var table;
 
     function edit_vacacaciones(id)
     {
-      $('#form')[0].reset(); // reset form on modals
+      $('#form')[0].reset();
       var flag=false;
-      //Ajax Load data from ajax
       $.ajax({
         url : "<?php echo site_url('/MantenimientoRegistros/ajax_edit_vacaciones')?>/" + id,
         type: "GET",
         dataType: "JSON",
         success: function(data)
         {
-            // JSON.stringify(data);
+            var dias1           = parseInt(data.diasUsados1-data.domingos1);
+            var dias2           = parseInt(data.diasUsados2-data.domingos2);
+            var dias3           = parseInt(data.diasUsados3-data.domingos3);
+            var diasPermiso1    = parseInt(data.diasPermisoUsados1);
+            var diasPermiso2    = parseInt(data.diasPermisoUsados2);
+            var diasUsadosTotal = dias1+dias2+dias3+diasPermiso1+diasPermiso2;
             $('[name="badgenumber"]').val(data.badgenumber);
+            //PERMISOS
+            //
+            $('[name="permiso_1_inicio"]').val(data.permiso_periodo_1_inicio);
+            $('[name="permiso_1_termino"]').val(data.permiso_periodo_1_termino);
+            var flag= validaEditable(data.permiso_periodo_1_inicio,data.permiso_periodo_1_termino);
+            if(flag===true){
+              $('[name="permiso_1_inicio"]').prop('readonly', true);
+              $('[name="permiso_1_termino"]').prop('readonly', true);
+            }
+            $('#diasPermisoUsados1').html(data.diasPermisoUsados1 + " dias");
+            //
+            $('[name="permiso_2_inicio"]').val(data.permiso_periodo_2_inicio);
+            $('[name="permiso_2_termino"]').val(data.permiso_periodo_2_termino);
+            var flag= validaEditable(data.permiso_periodo_2_inicio,data.permiso_periodo_2_termino);
+            if(flag===true){
+              $('[name="permiso_2_inicio"]').prop('readonly', true);
+              $('[name="permiso_2_termino"]').prop('readonly', true);
+            
+            }
+            $('#diasPermisoUsados2').html(data.diasPermisoUsados2 + " dias");
+            //VACACIONES
+            //
             $('[name="periodo_1_inicio"]').val(data.vacaciones_periodo_1_inicio);
             $('[name="periodo_1_termino"]').val(data.vacaciones_periodo_1_termino);
             var flag= validaEditable(data.vacaciones_periodo_1_inicio,data.vacaciones_periodo_1_termino);
             if(flag===true){
               $('[name="periodo_1_inicio"]').prop('readonly', true);
               $('[name="periodo_1_termino"]').prop('readonly', true);
-            
             }
-            var dias1=data.diasUsados1-data.domingos1;
             $('#diasUsados1').html(dias1+' dias usados');
-
-
-
-
 
             $('[name="periodo_2_inicio"]').val(data.vacaciones_periodo_2_inicio);
             $('[name="periodo_2_termino"]').val(data.vacaciones_periodo_2_termino);
@@ -122,10 +142,7 @@
               $('[name="periodo_2_termino"]').prop('readonly', true);
              
             }
-            var dias2=data.diasUsados2-data.domingos2;
             $('#diasUsados2').html(dias2+' dias usados');
-
-
 
 
             $('[name="periodo_3_inicio"]').val(data.vacaciones_periodo_3_inicio);
@@ -136,13 +153,11 @@
               $('[name="periodo_3_termino"]').prop('readonly', true);
              
             }
-            var dias3=data.diasUsados3-data.domingos3;
             $('#diasUsados3').html(dias3+' dias usados');
 
-
-
+            //HELPERS
+            //
             $('#diasLey').html(data.diasLey);
-            var diasUsadosTotal= dias1+dias2+dias3;
             var diasLibres=data.diasLey-diasUsadosTotal;
             $('#diasLibres').html(diasLibres);
  
@@ -185,7 +200,7 @@
     }
 
     function validaEditable(inicio,termino){
-      if(inicio==='1900-01-00' &&  termino==='1900-01-00'){
+      if(inicio==='0' &&  termino==='0'){
         return false;
       }else{
         return true;
@@ -214,10 +229,38 @@
         </div>
           
         <form action="#" id="form" class="form-horizontal">
-           <input type="hidden" value="" name="badgenumber"/> 
+           <input type="hidden" value="" name="badgenumber"/>
               <div class="row">
                 <div class="form-group">
-                  <label class="control-label col-md-3">Periodo 1</label>
+                  <label class="control-label col-md-3">Permiso a cuenta de vacaciones(1)</label>
+                  <div class="col-md-3">
+                    <input name="permiso_1_inicio" id="permiso_1_inicio" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
+                  </div>
+                  <div class="col-md-3">
+                    <input name="permiso_1_termino" id="permiso_1_termino" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
+                  </div>
+                  <div class="col-md-3">
+                    <p id="diasPermisoUsados1"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="form-group">
+                  <label class="control-label col-md-3">Permiso a cuenta de vacaciones(2)</label>
+                  <div class="col-md-3">
+                    <input name="permiso_2_inicio" id="permiso_2_inicio" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
+                  </div>
+                  <div class="col-md-3">
+                    <input name="permiso_2_termino" id="permiso_2_termino" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
+                  </div>
+                  <div class="col-md-3">
+                    <p id="diasPermisoUsados2"></p>
+                  </div>
+                </div>
+              </div> 
+              <div class="row">
+                <div class="form-group">
+                  <label class="control-label col-md-3">Vacaciones(1)</label>
                   <div class="col-md-3">
                     <input name="periodo_1_inicio" id="periodo_1_inicio" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
                   </div>
@@ -231,7 +274,7 @@
               </div>
               <div class="row">
                 <div class="form-group">
-                  <label class="control-label col-md-3">Periodo 2</label>
+                  <label class="control-label col-md-3">Vacaciones(2)</label>
                   <div class="col-md-3">
                     <input name="periodo_2_inicio" id="periodo_2_inicio" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
                   </div>
@@ -245,7 +288,7 @@
               </div>
               <div class="row">
                 <div class="form-group">
-                  <label class="control-label col-md-3">Periodo 3</label>
+                  <label class="control-label col-md-3">Vacaciones(3)</label>
                   <div class="col-md-3">
                     <input name="periodo_3_inicio" id="periodo_3_inicio" data-language="en" placeholder="00/00/00" class="form-control calendario" type="text">
                   </div>
