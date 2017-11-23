@@ -28,6 +28,7 @@ class Admin extends CI_Controller {
 		$this->load->model('vacaciones_model');
 
 		$this->load->helper('numeros');
+		$this->load->helper('formatos');
 	}
 	
 	//Vista principal
@@ -69,7 +70,7 @@ class Admin extends CI_Controller {
 			$this->load->view('header');
 
 			$datos['infoFormato'] 		= $slug_formato;
-			//consulta a models
+			//consulta a models para nutrir vistas
 			$datos['directivos'] 		= $this->puestos_model->get_nombre_de_directivos();
 			$datos['puestos'] 			= $this->puestos_model->get_puestos();
 			$datos['infoVacaciones']	= $this->vacaciones_model->get_info_by_id($_SESSION['badgenumber']);
@@ -166,14 +167,13 @@ class Admin extends CI_Controller {
 				
 					break;
 			}
-
+			//si form no cumple validaciones
 			if ($this->form_validation->run() == FALSE){
                 $this->load->view('formato/GDHO/form_'.$slug_formato, $datos);
             }
             else{
             	//si form pasa validacion revisar datos
             	$data['datos'] = $this->input->post();
-
 
 
             	//INICIO Formateo de Array exclusivo para formulario_de_salida_sacimex_2017
@@ -191,10 +191,9 @@ class Admin extends CI_Controller {
 
 
 
-            	// Obtener nombre de la persona que recibe el formato
+            	// Obtener destinatarios
             	$data['destinatario'] = $this->puestos_model->get_nombre_directivo_por_clave($data['datos']['claveRecibe']);
             	$data['puesto'] = $this->puestos_model->get_nombre_puesto_por_clave($data['datos']['puestoRecibe']);
-            	// Obtener nombre de la persona que recibe el formato
 				$this->load->view('generaPDF/revisa_solicitud', $data);
             }
 			
@@ -234,43 +233,8 @@ class Admin extends CI_Controller {
 
 
 				$this->formatos_model->guarda_historial($query);
-
-
-				//INICIA guardado de datos exclusivo de formato permiso a cuenta de vacaciones
-				if ($formatoRequisitado== 'permiso_a_cuenta_de_vacaciones_2017') {
-					$badgenumber = intval($data['datos']['claveRemitente']);
-					$datos['infoPermisos'] = $this->vacaciones_model->consulta_permisos($badgenumber);
-					if (empty($datos['infoPermisos']->permiso_periodo_1_inicio) && empty($datos['infoPermisos']->permiso_periodo_1_termino)) {
-						if ($data['datos']['permisoPeriodo2']=="") {
-						$dataFecha= array(
-							'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
-							'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo1']
-							);
-						}else{
-							$dataFecha= array(
-								'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
-								'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo2']
-							);
-						}
-					}else{
-						if ($data['datos']['permisoPeriodo2']=="") {
-						$dataFecha= array(
-							'permiso_periodo_2_inicio'	=>	$data['datos']['permisoPeriodo1'],
-							'permiso_periodo_2_termino'	=>	$data['datos']['permisoPeriodo1']
-							);
-						}else{
-							$dataFecha= array(
-								'permiso_periodo_2_inicio'	=>	$data['datos']['permisoPeriodo1'],
-								'permiso_periodo_2_termino'	=>	$data['datos']['permisoPeriodo2']
-							);
-						}
-					}
-					$this->vacaciones_model->guarda_permisos($badgenumber,$dataFecha);
-				}
-				//TERMINA guardado de datos exclusivo de formato permiso a cuenta de vacaciones
-
-
-
+				//helper formatos
+				valida_insertar_permisos($formatoRequisitado,$data);
 				$this->load->view('header');
 				$this->load->view('generaPDF/autorizacion_pendiente', $data);
 				$this->load->view('footer');
