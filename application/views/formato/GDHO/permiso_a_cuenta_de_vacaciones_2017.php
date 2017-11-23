@@ -17,7 +17,7 @@
 <body>
 <table style="width: 100%;">
 	<tr>
-	<td style="text-align: center; border:0px;" colspan="2">SOLICITUD DE VACACIONES 2017</td>
+	<td style="text-align: center; border:0px;" colspan="2">PERMISO A CUENTA DE VACACIONES 2017</td>
 	</tr>
 	<tr>
 		<td style="border:0px;"> <img width="150px" src="http://www.opcionessacimex.com/img/header/logoSacimex.png" alt=""> </td>
@@ -47,9 +47,21 @@
 
 	<tr>
 		<td style="border:0px;" colspan="2">
-			<p><strong><?php echo $_GET['nombreEmpleado']; ?></strong>, colaborador dela empresa TECHNOLOGICAL HUMAN PROVISION, SA DE CV, desde 10 de julio 2015 y actualmente prestando mis servicios en la empresa denominada: OPCIONES SACIMEX S.A. DE C.V. SOFOM E.N.R. por medio de la presente hago llegar ante usted una solicitud para que me sea otorgado un "permiso a cuneta de vaciones" con fecha ___ esto con la finalidad de atender una situación ___</p>
+				<p><strong><?php echo $_GET['nombreEmpleado']; ?></strong>, colaborador de la empresa TECHNOLOGICAL HUMAN PROVISION, SA DE CV, 
+				y actualmente prestando mis servicios en la empresa denominada: OPCIONES SACIMEX S.A. DE C.V. SOFOM E.N.R. 
+				por medio de la presente hago llegar ante usted una solicitud para que me sea otorgado un <strong>"permiso a cuenta de vacaciones"</strong> 
+				con fecha
+					<?php 
+						if (empty($_GET['permisoPeriodo2'])) {
+							echo $_GET['permisoPeriodo1'];
+						}else{
+							echo $_GET['permisoPeriodo1']." y fecha ".$_GET['permisoPeriodo2'];
+						}
+					 ?>
+				</p>
 
-			<p>Me comprometo a que mis actividades correspondientes al periodo solicitado quedarán cubiertas y con conocimiento de mi jefe inmediato. Esperando poder contar con su responsable apoyo, quedo a sus órdenes.</p>
+			<p>Me comprometo a que mis actividades correspondientes al periodo solicitado quedarán cubiertas y con conocimiento de mi 
+				jefe inmediato. Esperando poder contar con su responsable apoyo, quedo a sus órdenes.</p>
 
 			<small>*El periodo descrito integra (1) Domingo y (0) días inhábiles los cuales no se contabilizan en los cálculos.</small>
 			<table >

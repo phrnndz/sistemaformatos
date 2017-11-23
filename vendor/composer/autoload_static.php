@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInit12575fb935842cf9d84a57e21c11aa43
 {
     public static $prefixLengthsPsr4 = array (
+        'F' => 
+        array (
+            'FontLib\\' => 8,
+        ),
         'D' => 
         array (
             'Dompdf\\' => 7,
@@ -14,6 +18,10 @@ class ComposerStaticInit12575fb935842cf9d84a57e21c11aa43
     );
 
     public static $prefixDirsPsr4 = array (
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
         'Dompdf\\' => 
         array (
             0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
@@ -34,12 +42,9 @@ class ComposerStaticInit12575fb935842cf9d84a57e21c11aa43
             array (
                 0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src',
             ),
-        ),
-        'F' => 
-        array (
-            'FontLib\\' => 
+            'Sabberworm\\CSS' => 
             array (
-                0 => __DIR__ . '/..' . '/phenx/php-font-lib/src',
+                0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
             ),
         ),
     );

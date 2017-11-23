@@ -79,9 +79,6 @@
 </script>
 
 <script type="text/javascript">
-    $(document).ready( function () {
-        $('#tableUsers').DataTable();
-    } );
 
     var save_method; 
     var table;

@@ -47,7 +47,7 @@
 
 	<tr>
 		<td style="border:0px;" colspan="2">
-			<p><strong><?php echo $_GET['nombreEmpleado']; ?></strong>, colaborador dela empresa TECHNOLOGICAL HUMAN PROVISION, SA DE CV, desde 10 de julio 2015 y actualmente prestando mis servicios en la empresa denominada: OPCIONES SACIMEX S.A. DE C.V. SOFOM E.N.R. como
+			<p><strong><?php echo $_GET['nombreEmpleado']; ?></strong>, colaborador de la empresa TECHNOLOGICAL HUMAN PROVISION, SA DE CV, desde 10 de julio 2015 y actualmente prestando mis servicios en la empresa denominada: OPCIONES SACIMEX S.A. DE C.V. SOFOM E.N.R. como
 			<strong><?php echo $_GET['puestoTrabajo'];  ?></strong>, solicito respetuosamente, mi periodo vacacional del año en curso.</p>
 
 			<p>Cuento con:	<?php  ?> y cabe señalar que tengo cero días a cuenta de vacaciones, por lo que al solicitar del <strong><?php echo $_GET['fechaSolicitudInicio'];  ?></strong> al <strong><?php echo $_GET['fechaSolicitudTermino'];  ?></strong> declaro tener pendiente por ejecutar <?php  ?> por derecho laboral y voluntad propia.</p>

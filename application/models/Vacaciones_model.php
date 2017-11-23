@@ -44,10 +44,10 @@ class Vacaciones_model extends CI_Model {
 										,NU.nombre_usuario
 										,IFNULL(NU.permiso_periodo_1_inicio,"0") AS permiso_periodo_1_inicio
 										,IFNULL(NU.permiso_periodo_1_termino,"0") AS permiso_periodo_1_termino
-										,IF(NU.permiso_periodo_1_inicio IS NULL AND NU.permiso_periodo_1_termino IS NULL,"0",IFNULL(datediff(NU.permiso_periodo_1_inicio,NU.permiso_periodo_1_termino)+1, "0")) as diasPermisoUsados1
+										,IF(NU.permiso_periodo_1_inicio IS NULL AND NU.permiso_periodo_1_termino IS NULL,"0",IFNULL(datediff(NU.permiso_periodo_1_termino,NU.permiso_periodo_1_inicio)+1, "0")) as diasPermisoUsados1
 										,IFNULL(NU.permiso_periodo_2_inicio,"0") AS permiso_periodo_2_inicio
 										,IFNULL(NU.permiso_periodo_2_termino,"0") AS permiso_periodo_2_termino
-										,IF(NU.permiso_periodo_2_inicio IS NULL AND NU.permiso_periodo_2_termino IS NULL,"0",IFNULL(datediff(NU.permiso_periodo_2_inicio,NU.permiso_periodo_2_termino)+1, "0")) as diasPermisoUsados2
+										,IF(NU.permiso_periodo_2_inicio IS NULL AND NU.permiso_periodo_2_termino IS NULL,"0",IFNULL(datediff(NU.permiso_periodo_2_termino,NU.permiso_periodo_2_inicio)+1, "0")) as diasPermisoUsados2
 									    ,IFNULL(NU.vacaciones_periodo_1_inicio,"0") AS vacaciones_periodo_1_inicio
 									    ,IFNULL(NU.vacaciones_periodo_1_termino,"0") AS vacaciones_periodo_1_termino
 										,IF(NU.vacaciones_periodo_1_inicio IS NULL AND NU.vacaciones_periodo_1_termino IS NULL,"0",IFNULL(datediff(NU.vacaciones_periodo_1_termino,NU.vacaciones_periodo_1_inicio)+1, "0")) as diasUsados1
@@ -81,11 +81,21 @@ class Vacaciones_model extends CI_Model {
 		return $this->db->affected_rows();
 	}
 
-	public function guarda_vacaciones($where,$data){
+	public function guarda_permisos($where,$data){
 		$this->db->where('badgenumber', $where);
 		$this->db->update('new_usuarios', $data);
-		return $this->db->affected_rows();
-		
+		return $this->db->affected_rows();	
+	}
+
+	public function consulta_permisos($badgenumber){
+		$query = $this->db->query('	SELECT 
+									permiso_periodo_1_inicio
+									,permiso_periodo_1_termino
+									FROM
+									new_usuarios
+									WHERE
+									badgenumber='.$badgenumber);
+		return $query->row();
 	}
 }
 

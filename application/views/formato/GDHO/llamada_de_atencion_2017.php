@@ -5,7 +5,7 @@
 	<title>Document</title>
 	<style>	
 		body {
-			font: 10px normal Helvetica, Arial, sans-serif;
+			font: 12px normal Helvetica, Arial, sans-serif;
 			}
 		table {
 		    border-collapse: collapse;
@@ -67,12 +67,12 @@
 		</td>
 	</tr>
 	<tr>
-		<td style="border:0px;">
+		<td style="border:0px;" colspan="2">
 			<p>Le agradezco de antemano su responsabilidad y compromiso para dar cumplimiento a lo solicitado, en términos de la Política interna de la empresa. Sin más por el momento quedo a sus órdenes.</p>
 		</td>
 	</tr>
 	<tr>
-		<td style="border:0px; text-align: center;">
+		<td style="border:0px; text-align: center;" colspan="2">
 			<br>
 			<p><strong>Opciones Sacimex S.A. de C.V. SOFOM E.N.R.</strong></p>
 			<br>
@@ -84,8 +84,8 @@
 		</td>
 	</tr>
 	<tr>
-		<td  style="border:0px;"">CC: GOPR/GDHO</td>
-		<td  style="border:0px;""></td>
+		<td  style="border:0px;">CC: GOPR/GDHO</td>
+		<td  style="border:0px;"></td>
 	</tr>
 </table>
 <br><br>

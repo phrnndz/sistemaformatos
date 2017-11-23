@@ -205,6 +205,7 @@ class Admin extends CI_Controller {
 		
 	}
 
+
 	//funcion que guarda datos de los form
 	public function guardaDatos(){
 		//si estas logueado
@@ -238,20 +239,33 @@ class Admin extends CI_Controller {
 				//INICIA guardado de datos exclusivo de formato permiso a cuenta de vacaciones
 				if ($formatoRequisitado== 'permiso_a_cuenta_de_vacaciones_2017') {
 					$badgenumber = intval($data['datos']['claveRemitente']);
-					if ($data['datos']['permisoPeriodo2']=="") {
+					$datos['infoPermisos'] = $this->vacaciones_model->consulta_permisos($badgenumber);
+					if (empty($datos['infoPermisos']->permiso_periodo_1_inicio) && empty($datos['infoPermisos']->permiso_periodo_1_termino)) {
+						if ($data['datos']['permisoPeriodo2']=="") {
 						$dataFecha= array(
 							'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
 							'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo1']
-						);
+							);
+						}else{
+							$dataFecha= array(
+								'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
+								'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo2']
+							);
+						}
 					}else{
+						if ($data['datos']['permisoPeriodo2']=="") {
 						$dataFecha= array(
-							'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
-							'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo1'],
-							'permiso_periodo_2_inicio'	=>	$data['datos']['permisoPeriodo2'],
-							'permiso_periodo_2_termino'	=>	$data['datos']['permisoPeriodo2']
-						);
+							'permiso_periodo_2_inicio'	=>	$data['datos']['permisoPeriodo1'],
+							'permiso_periodo_2_termino'	=>	$data['datos']['permisoPeriodo1']
+							);
+						}else{
+							$dataFecha= array(
+								'permiso_periodo_2_inicio'	=>	$data['datos']['permisoPeriodo1'],
+								'permiso_periodo_2_termino'	=>	$data['datos']['permisoPeriodo2']
+							);
+						}
 					}
-					$this->vacaciones_model->guarda_vacaciones($badgenumber,$dataFecha);
+					$this->vacaciones_model->guarda_permisos($badgenumber,$dataFecha);
 				}
 				//TERMINA guardado de datos exclusivo de formato permiso a cuenta de vacaciones
 
