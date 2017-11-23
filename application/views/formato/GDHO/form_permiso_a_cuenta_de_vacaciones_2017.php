@@ -48,7 +48,7 @@
 								<input type='text' name="permisoPeriodo1" id="permisoPeriodo1" data-language="en" placeholder="00/00/00" value="" />
 								<br>
 								<label for="permisoPeriodo2" id="labelpermisoPeriodo2">Fecha de permiso</label>     
-								<input type='text' name="permisoPeriodo2" id="permisoPeriodo2" data-language="en" placeholder="00/00/00"  value="1900-01-00" />
+								<input type='text' name="permisoPeriodo2" id="permisoPeriodo2" data-language="en" placeholder="00/00/00"  value="" />
 							</div><br>
 							<h3>Destinatario</h3>
 							<hr>
@@ -68,8 +68,6 @@
 							</div><br><br>
 							<button type="submit" class="btn btn-default">Continuar</button> 
 							<?php echo form_close(); ?> 
-
-						<?php print_r($infoVacaciones) ?>
 					</div>
 				</div>
 			<? }else{ ?>
@@ -118,11 +116,11 @@
 
 		$('#permisoPeriodo1').datepicker({
 			minDate: new Date(),
-			dateFormat: 'yyyy/mm/dd',
+			dateFormat: 'yyyy-mm-dd',
 		});
 		$('#permisoPeriodo2').datepicker({
 			minDate: new Date(),
-			dateFormat: 'yyyy/mm/dd',
+			dateFormat: 'yyyy-mm-dd',
 		});
 
 	});

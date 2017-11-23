@@ -80,5 +80,12 @@ class Vacaciones_model extends CI_Model {
 		$this->db->update('new_usuarios', $data, $where);
 		return $this->db->affected_rows();
 	}
+
+	public function guarda_vacaciones($where,$data){
+		$this->db->where('badgenumber', $where);
+		$this->db->update('new_usuarios', $data);
+		return $this->db->affected_rows();
+		
+	}
 }
 

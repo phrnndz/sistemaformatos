@@ -70,8 +70,8 @@ class Admin extends CI_Controller {
 
 			$datos['infoFormato'] 		= $slug_formato;
 			//consulta a models
-			//$datos['directivos'] 		= $this->puestos_model->get_nombre_de_directivos();
-			//$datos['puestos'] 			= $this->puestos_model->get_puestos();
+			$datos['directivos'] 		= $this->puestos_model->get_nombre_de_directivos();
+			$datos['puestos'] 			= $this->puestos_model->get_puestos();
 			$datos['infoVacaciones']	= $this->vacaciones_model->get_info_by_id($_SESSION['badgenumber']);
 
 			//obtiene validaciones de forms de acuerdo al formato requisitado
@@ -161,9 +161,6 @@ class Admin extends CI_Controller {
 						$datos['validaMostrarForm']	= TRUE;
 					}
 
-
-
-
 				
 				default:
 				
@@ -237,7 +234,29 @@ class Admin extends CI_Controller {
 
 				$this->formatos_model->guarda_historial($query);
 
-				//carga vista
+
+				//INICIA guardado de datos exclusivo de formato permiso a cuenta de vacaciones
+				if ($formatoRequisitado== 'permiso_a_cuenta_de_vacaciones_2017') {
+					$badgenumber = intval($data['datos']['claveRemitente']);
+					if ($data['datos']['permisoPeriodo2']=="") {
+						$dataFecha= array(
+							'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
+							'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo1']
+						);
+					}else{
+						$dataFecha= array(
+							'permiso_periodo_1_inicio'	=>	$data['datos']['permisoPeriodo1'],
+							'permiso_periodo_1_termino'	=>	$data['datos']['permisoPeriodo1'],
+							'permiso_periodo_2_inicio'	=>	$data['datos']['permisoPeriodo2'],
+							'permiso_periodo_2_termino'	=>	$data['datos']['permisoPeriodo2']
+						);
+					}
+					$this->vacaciones_model->guarda_vacaciones($badgenumber,$dataFecha);
+				}
+				//TERMINA guardado de datos exclusivo de formato permiso a cuenta de vacaciones
+
+
+
 				$this->load->view('header');
 				$this->load->view('generaPDF/autorizacion_pendiente', $data);
 				$this->load->view('footer');

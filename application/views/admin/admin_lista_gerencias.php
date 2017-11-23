@@ -12,9 +12,10 @@
 				</div>
 
 				<div class="row">
-					<div class="col-md-4 col-sm-12 col-xs-12 stats-info widget">
+					<div class="col-md-12">
+						<div class="grids widget-shadow">
 						<div class="stats-title">
-							<h3 class="title1">Pendientes</h3>
+							<h3 class="title1">Formatos dirigidos hacía ti</h3>
 						</div>
 						<div class="stats-body">
 							<ul class="list-unstyled">
@@ -41,9 +42,11 @@
 								
 							</ul>
 						</div>
+						</div>
 					</div>
-					<div class="col-md-8 col-sm-12 col-xs-12 stats-info stats-last widget-shadow">
-							<h3 class="title1">Mis Formatos</h3>
+					<div class="col-md-12">
+						<div class="grids widget-shadow">
+							<h3 class="title1">Mis formatos enviados</h3>
 							<?php if (empty($solicitudesPend) && empty($solicitudesAcep) && empty($solicitudesRech)) {?>
 								<p>No has enviado solicitudes</p>
 							<?php } else {?>
@@ -96,10 +99,9 @@
 								</tbody>
 							</table>	
 							<?php } ?>	
-						
+						</div>
 					</div>
 				</div>
-
 
 				<div class="row">
 					<div class="col-md-12">
