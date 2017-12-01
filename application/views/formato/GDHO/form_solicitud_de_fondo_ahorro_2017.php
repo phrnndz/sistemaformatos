@@ -43,24 +43,22 @@
 						<input type='text' name="fechaSolicitudTermino" id="fechaSolicitudTermino" data-language="en" placeholder="00/00/00" value="<?php echo set_value('fechaSolicitudTermino'); ?>" />
 						
 					</div><br>
-					<h3>Destinatario</h3>
-					<hr>
-					<div class="form-group">
-						<label for="claveRecibe">¿Quién lo recibe?</label>
-						<select name="claveRecibe" id="claveRecibe" class="form-control">
-							 <?php  foreach ($directivos as $directivo) { ?>
-								<option value="<?php echo $directivo['badgenumber'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
-							 <?php } ?>
-						</select>
-					</div>
-					<div class="form-group">
-						<label for="puestoRecibe">Puesto de trabajo a quien va dirigido</label>
-						<select name="puestoRecibe" id="puestoRecibe" class="form-control">
-							 <?php  foreach ($puestos as $puesto) { ?>
-								<option value="<?php echo $puesto['id_puesto'] ?>"><?php echo $puesto['clave_puesto'] ?></option>
-							 <?php } ?>
-						</select>
-					</div><br><br>
+							<h3>Destinatario</h3>
+							<hr>
+							<div class="form-group">
+								<label for="nombreRecibe">¿Quién lo recibe?</label>
+								<select name="claveRecibe" id="claveRecibe" class="form-control">
+									 <?php  foreach ($directivos as $directivo) { ?>
+										<option value="<?php echo $directivo['badgenumber'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
+									 <?php } ?>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="puestoRecibe">Puesto de trabajo a quien va dirigido</label>
+								<select name="puestoRecibe" id="puestoRecibe" class="form-control" readonly>
+										<option value=""></option>
+								</select>
+							</div><br><br>
 					<button type="submit" class="btn btn-default">Continuar</button> 
 					<?php echo form_close(); ?> 
 				</div>
@@ -86,4 +84,39 @@
 		});
 
 	});
+	</script>
+
+	
+<!-- scripts detallados  -->
+	<script>
+	$( document ).ready(function() {
+		// Initialization
+		var id = $('#claveRecibe').val();
+	    populate_submenu(id);
+		$( "#claveRecibe" ).change(function() {
+	       	var id = $('#claveRecibe').val();
+	        populate_submenu(id);
+	       });
+
+	});
+	</script>
+
+	<script>
+	function populate_submenu(id) {
+	  $('#puestoRecibe').empty();
+	  $('#puestoRecibe').append("<option>Loading ....</option>");
+	  $.ajax({
+	    type: "GET",
+	    url: "<?php echo site_url('admin/populatePuesto')?>/" + id,
+	    dataType: 'json',
+	    success: function(data) {
+	    	console.log('hola pamela');
+	    	console.log(JSON.stringify(data));
+	      $('#puestoRecibe').empty();
+		    $.each(data, function(key, value) {
+		        $('#puestoRecibe').append('<option value="'+ value.id_puesto +'">'+ value.clavepuesto +'</option>');
+		    });
+		}//termina success
+	  });}
+
 	</script>

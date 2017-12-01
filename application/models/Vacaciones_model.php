@@ -54,18 +54,21 @@ class Vacaciones_model extends CI_Model {
 										,IFNULL(ROUND(((unix_timestamp(NU.vacaciones_periodo_1_termino) - unix_timestamp(NU.vacaciones_periodo_1_inicio) ) /(24*60*60)-7+WEEKDAY(NU.vacaciones_periodo_1_inicio)-WEEKDAY(NU.vacaciones_periodo_1_termino))/7)
 										 + IF(WEEKDAY(NU.vacaciones_periodo_1_inicio) <= 6, 1, 0)
 										 + IF(WEEKDAY(NU.vacaciones_periodo_1_termino) >= 6, 1, 0),"0") as domingos1
+										,calculaFestivos(NU.vacaciones_periodo_1_inicio,NU.vacaciones_periodo_1_termino) AS diasFestivos1
 									    ,IFNULL(NU.vacaciones_periodo_2_inicio,"0") vacaciones_periodo_2_inicio
 									    ,IFNULL(NU.vacaciones_periodo_2_termino,"0") vacaciones_periodo_2_termino
 										,IF(NU.vacaciones_periodo_2_inicio IS NULL AND NU.vacaciones_periodo_2_termino IS NULL,"0",IFNULL(datediff(NU.vacaciones_periodo_2_termino,NU.vacaciones_periodo_2_inicio)+1, "0")) as diasUsados2
 									    ,IFNULL(ROUND(((unix_timestamp(NU.vacaciones_periodo_2_termino) - unix_timestamp(NU.vacaciones_periodo_2_inicio) ) /(24*60*60)-7+WEEKDAY(NU.vacaciones_periodo_2_inicio)-WEEKDAY(NU.vacaciones_periodo_2_termino))/7)
 										 + IF(WEEKDAY(NU.vacaciones_periodo_2_inicio) <= 6, 1, 0)
 										 + IF(WEEKDAY(NU.vacaciones_periodo_2_termino) >= 6, 1, 0),"0") as domingos2
+									    ,calculaFestivos(NU.vacaciones_periodo_2_inicio,NU.vacaciones_periodo_2_termino) AS diasFestivos2
 									    ,IFNULL(NU.vacaciones_periodo_3_inicio,"0") vacaciones_periodo_3_inicio
 									    ,IFNULL(NU.vacaciones_periodo_3_termino,"0") vacaciones_periodo_3_termino
 									    ,IF(NU.vacaciones_periodo_3_inicio IS NULL AND NU.vacaciones_periodo_3_termino IS NULL,"0",IFNULL(datediff(NU.vacaciones_periodo_3_termino,NU.vacaciones_periodo_3_inicio)+1, "0")) as diasUsados3
 										,IFNULL(ROUND(((unix_timestamp(NU.vacaciones_periodo_3_termino) - unix_timestamp(NU.vacaciones_periodo_3_inicio) ) /(24*60*60)-7+WEEKDAY(NU.vacaciones_periodo_3_inicio)-WEEKDAY(NU.vacaciones_periodo_3_termino))/7)
 										 + IF(WEEKDAY(NU.vacaciones_periodo_3_inicio) <= 6, 1, 0)
 										 + IF(WEEKDAY(NU.vacaciones_periodo_3_termino) >= 6, 1, 0),"0") as domingos3
+										,calculaFestivos(NU.vacaciones_periodo_3_inicio,NU.vacaciones_periodo_3_termino) AS diasFestivos3
 									    ,NU.anios_antiguedad
 									    ,V.dias as diasLey
 									FROM new_usuarios NU

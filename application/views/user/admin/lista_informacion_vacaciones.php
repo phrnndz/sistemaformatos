@@ -93,9 +93,15 @@
         dataType: "JSON",
         success: function(data)
         {
-            var dias1           = parseInt(data.diasUsados1-data.domingos1);
-            var dias2           = parseInt(data.diasUsados2-data.domingos2);
-            var dias3           = parseInt(data.diasUsados3-data.domingos3);
+          //VARIABLES
+            var nohabiles1 = parseInt(data.domingos1)+parseInt(data.diasFestivos1);
+            var nohabiles2 = parseInt(data.domingos2)+parseInt(data.diasFestivos2);
+            var nohabiles3 = parseInt(data.domingos3)+parseInt(data.diasFestivos3);
+
+            var dias1           = parseInt(data.diasUsados1-nohabiles1);
+            var dias2           = parseInt(data.diasUsados2-nohabiles2);
+            var dias3           = parseInt(data.diasUsados3-nohabiles3);
+
             var diasPermiso1    = parseInt(data.diasPermisoUsados1);
             var diasPermiso2    = parseInt(data.diasPermisoUsados2);
             var diasUsadosTotal = dias1+dias2+dias3+diasPermiso1+diasPermiso2;
@@ -300,8 +306,7 @@
         </form>
      
            <div class="row">
-              <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Guardar</button>
-            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
            </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

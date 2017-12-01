@@ -20,5 +20,8 @@
               <li>
                 <a href="<?php echo base_url();?>MantenimientoRegistros/vacaciones" >Administracion Vacaciones</a>
               </li>
+              <li>
+                <a href="<?php echo base_url();?>MantenimientoRegistros/diasferiados" >Dias Feriados</a>
+              </li>
           </ul>
         </div>

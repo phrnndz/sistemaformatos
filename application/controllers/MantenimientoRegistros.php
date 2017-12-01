@@ -16,6 +16,7 @@ class MantenimientoRegistros extends CI_Controller {
 		$this->load->model('puestos_model');
 		$this->load->model('formatos_model');
 		$this->load->model('vacaciones_model');
+		$this->load->model('permisos_model');
 	}
 	
 	
@@ -254,6 +255,38 @@ class MantenimientoRegistros extends CI_Controller {
 				'periodo_3_termino' => $this->input->post('periodo_3_termino'),
 		);
 		$this->vacaciones_model->vacaciones_update(array('badgenumber' => $this->input->post('badgenumber')), $data);
+		echo json_encode(array("status" => TRUE));
+	}
+
+
+	//DIAS FESTIVOS
+
+	public function diasferiados(){
+		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+			//MEnú Solo para DHO
+				$this->load->view('header');
+				$datos['diasferiados'] = $this->permisos_model->get_diasfestivos();
+				$this->load->view('user/admin/header_lista_informacion.php');
+				$this->load->view('user/admin/lista_informacion_feriados.php', $datos);
+				$this->load->view('footer');
+
+		} else {
+			redirect('/login');
+		}
+	}
+
+	public function diaferiado_add(){
+		$data = array(
+				'Fecha' => $this->input->post('Fecha'),
+				'Descripcion' => $this->input->post('Descripcion'),
+			);
+		$insert = $this->permisos_model->diaferiado_add($data);
+		echo json_encode(array("status" => TRUE));
+
+	}
+
+	public function delete_diaferiado($id){
+		$this->permisos_model->delete_by_id($id);
 		echo json_encode(array("status" => TRUE));
 	}
 

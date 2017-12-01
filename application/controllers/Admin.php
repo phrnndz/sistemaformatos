@@ -26,6 +26,8 @@ class Admin extends CI_Controller {
 		$this->load->model('puestos_model');
 		$this->load->model('formatos_model');
 		$this->load->model('vacaciones_model');
+		$this->load->model('permisos_model');
+
 
 		$this->load->helper('numeros');
 		$this->load->helper('formatos');
@@ -132,6 +134,18 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('valores', 'valores', 'required');
 
 					break;
+				case 'permiso_con_goce_de_sueldo_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
+					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
+					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
+					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					$this->form_validation->set_rules('permisoPeriodo1','permisoPeriodo1','required');
+					$this->form_validation->set_rules('permisoPeriodo2','permisoPeriodo2','required');
+					$datos['permisos'] = $this->permisos_model->get_permisos();
+					break;
+
 				case 'permiso_a_cuenta_de_vacaciones_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
 					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');

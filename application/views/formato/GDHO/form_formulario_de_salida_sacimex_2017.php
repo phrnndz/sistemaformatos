@@ -15,7 +15,7 @@
 					<h4>Agradecemos mucho tu trabajo realizado en Opciones Sacimex SA de CV SOFOM ENR en beneficio de la empresa, compañeros y ambiente de trabajo. Por favor, te solicitamos nos des la oportunidad de mejorar al contestar el siguiente formulario con la mayor veracidad posible</h4><br><br>
 					<!-- Campos ocultos -->
 					<input type="hidden" name="formatoRequisitado" value="<?php echo $infoFormato; ?>" />
-					<input type="hidden" name="claveRecibe" id="claveRecibe" value="MRAMOS">
+					<input type="hidden" name="claveRecibe" id="claveRecibe" value="201610046">
 					<input type="hidden" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>">
 					<input type="hidden" name="puestoRecibe" id="puestoRecibe" class="form-control" value="17">  
 

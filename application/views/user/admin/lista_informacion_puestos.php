@@ -1,6 +1,6 @@
-				<div class="row">
-					<button class="btn" onclick="add_puesto()"><i class="glyphicon glyphicon-plus"></i>Nuevo Puesto</button>
-				</div>
+    <!-- 				<div class="row">
+    					<button class="btn" onclick="add_puesto()"><i class="glyphicon glyphicon-plus"></i>Nuevo Puesto</button>
+    				</div> -->
 				<div class="row">
 					<table id="tableUsers" class="table table-striped table-bordered" cellspacing="0" width="100%">
 						<thead>

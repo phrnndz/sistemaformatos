@@ -85,8 +85,8 @@ class Puestos_model extends CI_Model {
 	//POPULATE DROPDOWNS
 	public function get_puesto_by_badgenumber($badgenumber){
 		$query= $this->db->query("SELECT 
-							new.id_puesto
-							,pue.id_puesto
+							new.id_puesto as id_puesto
+							,pue.id_puesto as id_puesto2
 							,pue.clave_puesto AS clavepuesto
 							FROM
 							new_usuarios new
