@@ -36,18 +36,12 @@
 							<hr>
 							<div class="form-group">
 								<label for="nombreRecibe">Motivo del permiso</label>
-								<select name="motivoPermiso" id="motivoPermiso" class="form-control">
-									 <?php  foreach ($permisos as $permiso) { ?>
-										<option value="<?php echo $permiso['id_permiso'] ?>"><?php echo $permiso['titulo_permiso'].' ('.$permiso['dias_habiles'].' días habiles)' ?></option>
-									 <?php } ?>
-								</select>
+								<textarea type="text" name="motivoPermiso" id="motivoPermiso"></textarea> 
 								<br><br>
-								<label for="permisoPeriodo1">Fecha de permiso</label> 
-								<input type="hidden" id="diasHabiles" name="diasHabiles" value="">  
+								<label for="permisoPeriodo1">Fecha de permiso</label>   
 								<input type='text' name="permisoPeriodo1" id="permisoPeriodo1" data-language="en" placeholder="00/00/00" value="" />
 								<label for="permisoPeriodo2" id="labelpermisoPeriodo2">al</label>     
-								<input type='text' name="permisoPeriodo2" id="permisoPeriodo2"/>
-								<button id="buttonCalcula">Calcular Regreso</button>
+								<input type='text' name="permisoPeriodo2" id="permisoPeriodo2" data-language="en" placeholder="00/00/00"/>
 
 							</div><br>
 							<h3>Destinatario</h3>
@@ -100,15 +94,21 @@
 			    }
 			});
 
+			$('#permisoPeriodo2').datepicker({
+				minDate: new Date(),
+				dateFormat: 'yyyy-mm-dd',
+				onRenderCell: function (date, cellType) {
+			        if (cellType == 'day') {
+			            var day = date.getDay(),
+			                isDisabled = disabledDays.indexOf(day) != -1;
 
-			//boton detecta click y llama a la funcion calculaFechaTermino y asigna fecha
-			$('#buttonCalcula').click(function(){
-				$(this).attr('disabled', true);
-				var fechatmp 	= $('#permisoPeriodo1').val();
-				var diastmp 	= $('#diasHabiles').val();
-				$('#permisoPeriodo2').empty();
-				$('#permisoPeriodo2').val(calculaFechaTermino(fechatmp,diastmp));
+			            return {
+			                disabled: isDisabled
+			            }
+			        }
+			    }
 			});
+
 
 
 			/// ONCHANGUE para poblar submenus
@@ -117,12 +117,6 @@
 			$( "#claveRecibe" ).change(function() {
 		       	var id = $('#claveRecibe').val();
 		        populate_submenu(id);
-		    });
-		    var id = $('#motivoPermiso').val();
-		    populate_diashabiles(id);
-			$( "#motivoPermiso" ).change(function() {
-		       	var id = $('#motivoPermiso').val();
-		        populate_diashabiles(id);
 		    });
 
 		});
@@ -145,95 +139,6 @@
 		}
 
 
-
-		function populate_diashabiles(id) {
-			$('#diasHabiles').empty();
-			$.ajax({
-			type: "GET",
-			url: "<?php echo site_url('admin/populatediashabiles')?>/" + id,
-			dataType: 'json',
-			success: function(data) {
-					$('#diasHabiles').empty();
-					$.each(data, function(key, value) {
-						$('#diasHabiles').val(value.dias_habiles);
-				       
-				    });
-			  	
-				}
-			});
-		}
 	</script>
 
-
-
-
-	<script>
-		function calculaFechaTermino(fechatmp,diastmp){
-			var date = new Date(fechatmp);
-			var dateTermino = date.addWorkingDays(diastmp);
-			var dd = dateTermino.getDate();
-			var mm = dateTermino.getMonth()+1; //January is 0!
-			var yyyy = dateTermino.getFullYear();
-				if(dd<10){
-				    dd='0'+dd;
-				} 
-				if(mm<10){
-				    mm='0'+mm;
-				} 
-			var dateTermino = yyyy+'-'+mm+'-'+dd;
-			return dateTermino;
-		}
-
-		Date.prototype.holidays = {
-		  // fill in common holidays
-		  all: [
-		    '0101', // Jan 01
-		    '1225' // Dec 25
-		  ],
-		  2016: [
-		    // add year specific holidays
-		    '0104' // Jan 04 2016
-		  ],
-		  2017: [
-		    // And so on for other years.
-		  ]
-		};
-
-		Date.prototype.addWorkingDays = function(days) {
-		  while (days > 0) {
-		    this.setDate(this.getDate() + 1);
-		    if (!this.isHoliday()) days--;
-		  }
-
-		  return this;
-		};
-
-		Date.prototype.substractWorkingDays = function(days) {
-		  while (days > 0) {
-		    this.setDate(this.getDate() - 1);
-		    if (!this.isHoliday()) days--;
-		  }
-
-		  return this;
-		};
-
-		Date.prototype.isHoliday = function() {
-		  function zeroPad(n) {
-		    n |= 0;
-		    return (n < 10 ? '0' : '') + n;
-		  }
-
-		  // if weekend return true from here it self;
-		  if (this.getDay() == 0 ) {
-		    return true;
-		  }
-
-		  var day = zeroPad(this.getMonth() + 1) + zeroPad(this.getDate());
-
-		  // if date is present in the holiday list return true;
-		  return !!~this.holidays.all.indexOf(day) ||      
-		    (this.holidays[this.getFullYear()] ?
-		!!~this.holidays[this.getFullYear()].indexOf(day) : false);
-		};
-	</script>
 

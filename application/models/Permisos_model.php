@@ -41,6 +41,14 @@ class Permisos_model extends CI_Model {
 	}
 
 
+	// OBTIENE DIAS HABILES EN PERMISO CON GOCE DE SUELDO
+	public function get_dias_habiles_by_id_permiso($id_permiso){
+		$query= $this->db->query("SELECT 
+							*
+							FROM permisos
+							WHERE id_permiso=".$id_permiso);
+		return $query->row();
+	}
 	
 }
 

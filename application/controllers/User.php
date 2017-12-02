@@ -112,5 +112,11 @@ class User extends CI_Controller {
 		
 	}
 
+	public function busquedanombre($nombre){
+        $data= $this->user_model->get_badgenumber_by_search($nombre);
+        echo json_encode($data);
+        
+	}
+
 	
 }

@@ -81,5 +81,15 @@ class User_model extends CI_Model {
 	}
 
 
+	//BUSQUEDA EN LOGIN
+	public function get_badgenumber_by_search($nombre){
+		$result= $this->db->query('	SELECT name, lastname, badgenumber
+									FROM userinfo  
+									WHERE 
+									name like "%'.$nombre.'%"');
+		$usuarios = $result->result_array();
+		return $usuarios;
+	}
+
 }
 

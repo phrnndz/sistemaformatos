@@ -316,4 +316,9 @@ class Admin extends CI_Controller {
         echo json_encode($data);
         
 	}
+
+	public function populatediashabiles($id_permiso){
+		$data['query']= $this->permisos_model->get_dias_habiles_by_id_permiso($id_permiso);
+        echo json_encode($data);
+	}
 }
