@@ -46,8 +46,9 @@
 					<p>
 						<?php if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) : ?>
 							<a href="<?= base_url('logout') ?>">Salir</a> <br>
-							<span><?php echo $_SESSION['nombre_usuario'];  ?></span> <br>
-							<span><?php echo $_SESSION['puesto_nombre']; ?></span>
+							<span><small><?php echo $_SESSION['nombre_usuario'];  ?></small>  </span><br>
+							<span><small> ID: <?php echo $_SESSION['badgenumber'];  ?></small>  </span><br>
+							<span><small><?php echo $_SESSION['puesto_nombre']; ?></small> </span>
 						<?php else : ?>
 							<a href="<?= base_url('login') ?>">Login</a>
 						<?php endif; ?>

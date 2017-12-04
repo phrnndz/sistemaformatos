@@ -32,7 +32,7 @@ class User extends CI_Controller {
 			$this->load->library('form_validation');
 			
 			// set validation rules
-			$this->form_validation->set_rules('username', 'Username', 'required');
+			$this->form_validation->set_rules('badgenumber', 'badgenumber', 'required');
 			$this->form_validation->set_rules('password', 'Password', 'required');
 			$this->form_validation->set_message('password', 'Error Message');
 			
@@ -46,22 +46,26 @@ class User extends CI_Controller {
 			} else {
 				
 				// seteo de variables de form
-				$username = $this->input->post('username');
+				$badgenumber = $this->input->post('badgenumber');
 				$password = $this->input->post('password');
 				
-				if ($this->user_model->resolve_user_login($username, $password)) {
+				if ($this->user_model->resolve_user_login($badgenumber, $password)) {
 					
-					//$user_id = $this->user_model->get_user_id_from_username($username);
-					$user   = $this->user_model->get_user($username);
+					$user   = $this->user_model->get_user($badgenumber);
+
 					
 					// seteo de sesión
 					$_SESSION['badgenumber']      			= (int)$user[0]['badgenumber'];
 					$_SESSION['pk_clave_usuario']     		= (int)$user[0]['badgenumber'];
+					$_SESSION['id_sucursal']     			= (string)$user[0]['id_sucursal'];
 					$_SESSION['clave_usuario']     			= (string)$user[0]['clave_usuario'];
 					$_SESSION['nombre_usuario']    			= (string)$user[0]['nombre_usuario'];
 					$_SESSION['titulo_interno_usuario']    	= (string)$user[0]['titulo_interno_usuario'];
 					$_SESSION['puesto_nombre']     			= (string)$user[0]['clave_puesto'];
 					$_SESSION['fecha_contratacion']			= (string)$user[0]['ingreso_usuario'];
+					$_SESSION['id_puesto_jefe']				= (string)$user[0]['id_puesto_jefe'];
+					$_SESSION['jefe_puesto']				= (string)$user[0]['jefe_puesto'];
+					$_SESSION['puesto_jefe']				= (string)$user[0]['puesto_jefe'];
 					$_SESSION['logged_in']    				= (bool)true;
 					
 					

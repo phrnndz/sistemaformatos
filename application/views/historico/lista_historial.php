@@ -38,18 +38,18 @@
 								<td>
 									<?php 
 										if ($item['clave_remitente'] == $_SESSION['pk_clave_usuario']) {
-											echo '<i class="fa fa-user" aria-hidden="true"></i> '.$item['clave_remitente'];
+											echo '<i class="fa fa-user" aria-hidden="true"></i> '.$item['nombre_usuario'];
 										}else {
-											echo $item['clave_remitente'];
+											echo $item['nombre_usuario'];
 										}
 									?>
 								</td>
 								<td>
 									<?php 
 										if ($item['clave_destino'] == $_SESSION['pk_clave_usuario']) {
-											echo '<i class="fa fa-user" aria-hidden="true"></i> '.$item['clave_destino'];
+											echo '<i class="fa fa-user" aria-hidden="true"></i> '.$item['nombre_destino'];
 										}else {
-											echo $item['clave_destino'];
+											echo $item['nombre_destino'];
 										}
 									?>
 								</td>

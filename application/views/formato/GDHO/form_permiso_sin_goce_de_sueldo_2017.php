@@ -11,7 +11,7 @@
 					
 					<?php echo validation_errors(); ?>
 
-						<?php echo form_open('admin/GerenciaDHO/permiso_con_goce_de_sueldo_2017'); ?> 
+						<?php echo form_open('admin/GerenciaDHO/permiso_sin_goce_de_sueldo_2017'); ?> 
 
 							<div class="form-body">
 							<input type="hidden" name="formatoRequisitado" value="<?php echo $infoFormato; ?>" />
@@ -46,20 +46,20 @@
 							</div><br>
 							<h3>Destinatario</h3>
 							<hr>
-							<div class="form-group">
-								<label for="nombreRecibe">¿Quién lo recibe?</label>
-								<select name="claveRecibe" id="claveRecibe" class="form-control">
-									 <?php  foreach ($directivos as $directivo) { ?>
-										<option value="<?php echo $directivo['badgenumber'] ?>"><?php echo $directivo['titulo_interno_usuario'] ?></option>
-									 <?php } ?>
-								</select>
-							</div>
-							<div class="form-group">
-								<label for="puestoRecibe">Puesto de trabajo a quien va dirigido</label>
-								<select name="puestoRecibe" id="puestoRecibe" class="form-control" readonly>
-										<option value=""></option>
-								</select>
-							</div><br><br>
+							<?php foreach ($jefeinmediato as $value) {  ?>
+								<div class="form-group">
+								<label for="nombreRecibe">Jefe Inmediato</label>
+								<input type="text" name="titulo_interno_usuario" id="titulo_interno_usuario" class="form-control"  value="<?php echo $value['titulo_interno_usuario_jefe']; ?> " readonly>
+								<div class="form-group"> 
+								<label for="nombreRecibe">Puesto</label>
+								<input type="text" name="clavepuestojefe" id="clavepuestojefe" class="form-control" value="<?php echo $value['clave_puesto_jefe']; ?>" readonly> 
+								</div>
+								<br><br>
+								<input type="hidden" name="badgenumberjefe" id="badgenumberjefe" value="<?php echo $value['badgenumber_jefe']; ?>" >
+								<input type="hidden" name="idpuestojefe" id="idpuestojefe" value="<?php echo $value['id_puesto_jefe']; ?>" >
+
+								
+							<?php } ?>
 							<button type="submit" class="btn btn-default">Continuar</button> 
 							<?php echo form_close(); ?> 
 					</div>
@@ -110,33 +110,9 @@
 			});
 
 
-
-			/// ONCHANGUE para poblar submenus
-			var id = $('#claveRecibe').val();
-		    populate_submenu(id);
-			$( "#claveRecibe" ).change(function() {
-		       	var id = $('#claveRecibe').val();
-		        populate_submenu(id);
-		    });
-
 		});
 
-		//POPULATES
-		function populate_submenu(id) {
-		  $('#puestoRecibe').empty();
-		  $('#puestoRecibe').append("<option>Loading ....</option>");
-		  $.ajax({
-		    type: "GET",
-		    url: "<?php echo site_url('admin/populatePuesto')?>/" + id,
-		    dataType: 'json',
-		    success: function(data) {
-			      	$('#puestoRecibe').empty();
-				    $.each(data, function(key, value) {
-				        $('#puestoRecibe').append('<option value="'+ value.id_puesto +'">'+ value.clavepuesto +'</option>');
-				    });
-				}
-		  });
-		}
+
 
 
 	</script>

@@ -17,7 +17,16 @@
 					<input type="hidden" name="formatoRequisitado" value="<?php echo $infoFormato; ?>" />
 					<input type="hidden" name="claveRecibe" id="claveRecibe" value="201610046">
 					<input type="hidden" name="nombreEmpleado" id="nombreEmpleado" class="form-control" value="<?php echo $_SESSION['nombre_usuario']; ?>">
-					<input type="hidden" name="puestoRecibe" id="puestoRecibe" class="form-control" value="17">  
+
+					<?php foreach ($jefeinmediato as $value) {  ?>
+						<input type="hidden" name="titulo_interno_usuario" id="titulo_interno_usuario" class="form-control"  value="<?php echo $value['titulo_interno_usuario_jefe']; ?> " readonly> 
+						<input type="hidden" name="clavepuestojefe" id="clavepuestojefe" class="form-control" value="<?php echo $value['clave_puesto_jefe']; ?>" readonly> 
+
+						<input type="hidden" name="badgenumberjefe" id="badgenumberjefe" value="<?php echo $value['badgenumber_jefe']; ?>" >
+						<input type="hidden" name="idpuestojefe" id="idpuestojefe" value="<?php echo $value['id_puesto_jefe']; ?>" >
+
+						
+					<?php } ?>  
 
 					<div class="form-group">
 						<label for="checkbox" class="col-sm-4 control-label">¿Cuáles son tus motivos de abandono?</label>

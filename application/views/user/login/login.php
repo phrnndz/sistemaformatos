@@ -21,8 +21,8 @@
 			</div>
 			<?= form_open() ?>
 				<div class="form-group">
-					<label for="username">ID de usuario</label>
-					<input type="text" class="form-control" id="username" name="username" placeholder="Ingresa tu ID">
+					<label for="badgenumber">ID de usuario</label>
+					<input type="text" class="form-control" id="badgenumber" name="badgenumber" placeholder="Ingresa tu ID">
 				</div>
 				<div class="form-group">
 					<label for="password">Contraseña</label>

@@ -68,7 +68,7 @@
 											<td><?php echo $item['fecha']; ?></td>
 											<td><?php echo $item['slug_formato'];?></td>
 											<td><?php echo $item['comentario_revisor']; ?></td>
-											<td><?php echo $item['clave_destino'];?></td>
+											<td><?php echo $item['nombre_destino'];?></td>
 											<td></td>
 										</tr>
 									<?php } ?>

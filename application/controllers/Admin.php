@@ -22,6 +22,7 @@ class Admin extends CI_Controller {
 		$this->load->library('form_validation');
 		$this->load->helper(array('form'));
 		$this->load->helper(array('url'));
+		$this->load->model('user_model');
 		$this->load->model('gerencia_model');
 		$this->load->model('puestos_model');
 		$this->load->model('formatos_model');
@@ -78,14 +79,17 @@ class Admin extends CI_Controller {
 			$datos['infoVacaciones']	= $this->vacaciones_model->get_info_by_id($_SESSION['badgenumber']);
 
 			//obtiene validaciones de forms de acuerdo al formato requisitado
+			//EL JEFE INMEDIATO VARÍA DADO QUE ALGUNOS FORMATOS REQUIEREN DOBLE AUTORIZACION Y OTROS NO.
 			switch ($slug_formato) {
 				case 'llamada_de_atencion_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
 					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
 					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
 					$this->form_validation->set_rules('irregularidadTexto', 'irregularidadTexto', 'required');
-					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
-					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					$this->form_validation->set_rules('badgenumberjefe', 'badgenumberjefe', 'required');
+					$this->form_validation->set_rules('idpuestojefe', 'idpuestojefe', 'required');
+
+
 					break;
 				case 'solicitud_de_vacaciones_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
@@ -93,6 +97,10 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
 					$this->form_validation->set_rules('fechaSolicitudInicio', 'fechaSolicitudInicio', 'required');
 					$this->form_validation->set_rules('fechaSolicitudTermino', 'fechaSolicitudTermino', 'required');
+					$this->form_validation->set_rules('badgenumberjefe', 'badgenumberjefe', 'required');
+					$this->form_validation->set_rules('idpuestojefe', 'idpuestojefe', 'required');
+					//mostrar info de jefe inmediato
+					$datos['jefeinmediato']		= $this->user_model->get_jefe_inmediato($_SESSION['id_puesto_jefe'],$_SESSION['id_sucursal']);
 					break;
 				case 'solicitud_prestamo_laboral_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
@@ -133,17 +141,42 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('salario', 'salario', 'required');
 					$this->form_validation->set_rules('valores', 'valores', 'required');
 
+					//sin segunda autorizacion solo DHO
+					$datos['jefeinmediato']		= $this->user_model->get_dho();
+
+
 					break;
 				case 'permiso_con_goce_de_sueldo_2017':
 					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
 					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
 					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
 					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
-					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
-					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					$this->form_validation->set_rules('titulo_interno_usuario', 'titulo_interno_usuario', 'required');
+					$this->form_validation->set_rules('clavepuestojefe', 'clavepuestojefe', 'required');
+					$this->form_validation->set_rules('badgenumberjefe', 'badgenumberjefe', 'required');
+					$this->form_validation->set_rules('idpuestojefe', 'idpuestojefe', 'required');
 					$this->form_validation->set_rules('permisoPeriodo1','permisoPeriodo1','required');
 					$this->form_validation->set_rules('permisoPeriodo2','permisoPeriodo2','required');
-					$datos['permisos'] = $this->permisos_model->get_permisos();
+
+					$datos['permisos'] 			= $this->permisos_model->get_permisos();
+					$datos['jefeinmediato']		= $this->user_model->get_jefe_inmediato($_SESSION['id_puesto_jefe'],$_SESSION['id_sucursal']);
+					break;
+
+				case 'permiso_sin_goce_de_sueldo_2017':
+					$this->form_validation->set_error_delimiters('<span class="label label-danger">', '</span><br>');
+					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
+					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
+					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
+					$this->form_validation->set_rules('titulo_interno_usuario', 'titulo_interno_usuario', 'required');
+					$this->form_validation->set_rules('clavepuestojefe', 'clavepuestojefe', 'required');
+					$this->form_validation->set_rules('badgenumberjefe', 'badgenumberjefe', 'required');
+					$this->form_validation->set_rules('idpuestojefe', 'idpuestojefe', 'required');
+					$this->form_validation->set_rules('motivoPermiso', 'motivoPermiso', 'required');
+					$this->form_validation->set_rules('permisoPeriodo1','permisoPeriodo1','required');
+					$this->form_validation->set_rules('permisoPeriodo2','permisoPeriodo2','required');
+
+					$datos['permisos'] 			= $this->permisos_model->get_permisos();
+					$datos['jefeinmediato']		= $this->user_model->get_jefe_inmediato($_SESSION['id_puesto_jefe'],$_SESSION['id_sucursal']);
 					break;
 
 				case 'permiso_a_cuenta_de_vacaciones_2017':
@@ -151,8 +184,8 @@ class Admin extends CI_Controller {
 					$this->form_validation->set_rules('nombreEmpleado', 'nombreEmpleado', 'required');
 					$this->form_validation->set_rules('fechaInicioLaboral', 'fechaInicioLaboral', 'required');
 					$this->form_validation->set_rules('puestoTrabajo', 'puestoTrabajo', 'required');
-					$this->form_validation->set_rules('claveRecibe', 'claveRecibe', 'required');
-					$this->form_validation->set_rules('puestoRecibe', 'puestoRecibe', 'required');
+					$this->form_validation->set_rules('badgenumberjefe', 'badgenumberjefe', 'required');
+					$this->form_validation->set_rules('idpuestojefe', 'idpuestojefe', 'required');
 					$this->form_validation->set_rules('permisoPeriodo1','permisoPeriodo1','required');
 					
 					//Validacion de días para permiso  a cuenta de vacaciones
@@ -165,6 +198,9 @@ class Admin extends CI_Controller {
 					$diasDomingos 	=	$datos['infoVacaciones']->domingos1
 										+$datos['infoVacaciones']->domingos2
 										+$datos['infoVacaciones']->domingos3;
+
+					//mostrar info de jefe inmediato
+					$datos['jefeinmediato']		= $this->user_model->get_jefe_inmediato($_SESSION['id_puesto_jefe'],$_SESSION['id_sucursal']);
 					//Los dias domingos no se cuentan, es por eso que se restan los domingos a la cantidad total de días
 					$datos['diasUsadosTotal'] = $diasUsados-$diasDomingos;
 					//A los dias por ley se le restan los usados
@@ -206,8 +242,8 @@ class Admin extends CI_Controller {
 
 
             	// Obtener destinatarios
-            	$data['destinatario'] = $this->puestos_model->get_nombre_directivo_por_clave($data['datos']['claveRecibe']);
-            	$data['puesto'] = $this->puestos_model->get_nombre_puesto_por_clave($data['datos']['puestoRecibe']);
+            	$data['destinatario'] = $this->puestos_model->get_nombre_directivo_por_clave($data['datos']['badgenumberjefe']);
+            	$data['puesto'] = $this->puestos_model->get_nombre_puesto_por_clave($data['datos']['idpuestojefe']);
 				$this->load->view('generaPDF/revisa_solicitud', $data);
             }
 			
@@ -238,8 +274,9 @@ class Admin extends CI_Controller {
 				   'nombre_usuario'	=> 	$data['datos']['nombreEmpleado'],
 				   'clave_usuario' 	=> 	$data['datos']['claveUsuario'],
 				   'clave_remitente'=>	$data['datos']['claveUsuario'],
-				   'clave_destino' 	=>	$data['datos']['claveRecibe'],
-				   'puesto_destino' =>	$data['datos']['puestoRecibe'],
+				   'clave_destino' 	=>	$data['datos']['badgenumberjefe'],
+				   'nombre_destino'	=>	$data['datos']['titulo_interno_usuario'],
+				   'puesto_destino' =>	$data['datos']['idpuestojefe'],
 				   'get' 			=> 	$queryString,
 				   'status'			=>	'P',
 				   'fecha'			=> 	$now
