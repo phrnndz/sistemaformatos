@@ -40,11 +40,17 @@ class Admin extends CI_Controller {
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			$this->load->view('header');
 			// Lista las solicitudes pendientes para el usuario logueado
-			$datos['solicitudes'] = $this->formatos_model->get_solicitudes($_SESSION['pk_clave_usuario']);
+			if ($_SESSION['clave_usuario'] =='GDHO') {
+				$datosDHO =	$this->formatos_model->obtiene_datos_dho();
+				$datos['solicitudesdho'] = $this->formatos_model->get_solicitudes_dho($datosDHO->badgenumber);
+				$datos['solicitudes'] = $this->formatos_model->get_solicitudes($_SESSION['pk_clave_usuario']);
+			}else{
+				$datos['solicitudes'] = $this->formatos_model->get_solicitudes($_SESSION['pk_clave_usuario']);
+			}
 			// Lista de solicitudes enviadas , aceptadas y rechazadas
-			$datos['solicitudesAcep'] = $this->formatos_model->get_solicitudes_usuario_aceptadas($_SESSION['badgenumber']);
-			$datos['solicitudesPend'] = $this->formatos_model->get_solicitudes_usuario_pendientes($_SESSION['badgenumber']);
-			$datos['solicitudesRech'] = $this->formatos_model->get_solicitudes_usuario_rechazadas($_SESSION['badgenumber']);
+			//$datos['solicitudesAcep'] = $this->formatos_model->get_solicitudes_usuario_aceptadas($_SESSION['badgenumber']);
+			//$datos['solicitudesPend'] = $this->formatos_model->get_solicitudes_usuario_pendientes($_SESSION['badgenumber']);
+			//$datos['solicitudesRech'] = $this->formatos_model->get_solicitudes_usuario_rechazadas($_SESSION['badgenumber']);
 			// Lista todas las gerencias
 			$datos['gerencias'] = $this->gerencia_model->get_gerencias();
 			$this->load->view('admin/admin_lista_gerencias', $datos);
@@ -268,19 +274,59 @@ class Admin extends CI_Controller {
 
 				//que formato se requisito
 				$formatoRequisitado = 	$data['datos']['formatoRequisitado'];
-				$query = array(
-				   'id_historial_formatos' => NULL ,
-				   'slug_formato' 	=> 	$formatoRequisitado,
-				   'nombre_usuario'	=> 	$data['datos']['nombreEmpleado'],
-				   'clave_usuario' 	=> 	$data['datos']['claveUsuario'],
-				   'clave_remitente'=>	$data['datos']['claveUsuario'],
-				   'clave_destino' 	=>	$data['datos']['badgenumberjefe'],
-				   'nombre_destino'	=>	$data['datos']['titulo_interno_usuario'],
-				   'puesto_destino' =>	$data['datos']['idpuestojefe'],
-				   'get' 			=> 	$queryString,
-				   'status'			=>	'P',
-				   'fecha'			=> 	$now
-				);
+				$datosDHO =	$this->formatos_model->obtiene_datos_dho();
+				//apartir de formato obtenemos si necesita doble autorizacion
+				$segundaAutorizacion = $this->formatos_model->consultar_segunda_autorizacion($formatoRequisitado);
+				if($segundaAutorizacion->requiere_autorizacion == 0){
+					//no tiene segunda autorizacion
+					$query = array(
+					   'id_historial_formatos' 					=> 	NULL ,
+					   'slug_formato' 							=> 	$formatoRequisitado,
+					   'nombre_usuario'							=> 	$data['datos']['nombreEmpleado'],
+					   'clave_usuario' 							=> 	$data['datos']['claveUsuario'],
+					   'clave_remitente'						=>	$data['datos']['claveUsuario'],
+					   'primera_autorizacion_clave_destino' 	=>	NULL,
+					   'primera_autorizacion_nombre_destino'	=>	NULL,
+					   'primera_autorizacion_puesto_destino' 	=>	NULL,
+					   'primera_autorizacion_status'			=>	'A',
+					   'segunda_autorizacion_clave_destino' 	=>	$datosDHO->badgenumber,
+					   'segunda_autorizacion_nombre_destino'	=>	$datosDHO->titulo_interno_usuario,
+					   'segunda_autorizacion_puesto_destino' 	=>	$datosDHO->id_puesto,
+					   'segunda_autorizacion_status'			=>	'P',
+					   'get' 									=> 	$queryString,
+					   'fecha'									=> 	$now,
+					   'primera_autorizacion' 					=> 	1,
+					   'segunda_autorizacion' 					=> 	0,
+					   'requiere_autorizacion' 					=> 	$segundaAutorizacion->requiere_autorizacion
+
+					);
+				}
+				if($segundaAutorizacion->requiere_autorizacion == 1){
+					//si necesita segunda autorizacion
+					$query = array(
+					   'id_historial_formatos' 					=> NULL ,
+					   'slug_formato' 							=> 	$formatoRequisitado,
+					   'nombre_usuario'							=> 	$data['datos']['nombreEmpleado'],
+					   'clave_usuario' 							=> 	$data['datos']['claveUsuario'],
+					   'clave_remitente'						=>	$data['datos']['claveUsuario'],
+					   'primera_autorizacion_clave_destino' 	=>	$data['datos']['badgenumberjefe'],
+					   'primera_autorizacion_nombre_destino'	=>	$data['datos']['titulo_interno_usuario'],
+					   'primera_autorizacion_puesto_destino' 	=>	$data['datos']['idpuestojefe'],
+					   'primera_autorizacion_status'			=>	'P',
+					   'segunda_autorizacion_clave_destino' 	=>	$datosDHO->badgenumber,
+					   'segunda_autorizacion_nombre_destino'	=>	$datosDHO->titulo_interno_usuario,
+					   'segunda_autorizacion_puesto_destino' 	=>	$datosDHO->id_puesto,
+					   'segunda_autorizacion_status'			=>	'P',
+					   'get' 									=> 	$queryString,
+					   'fecha'									=> 	$now,
+					   'primera_autorizacion' 					=> 	0,
+					   'segunda_autorizacion' 					=> 	0,
+					   'requiere_autorizacion' 					=> 	$segundaAutorizacion->requiere_autorizacion,
+
+					);
+				}
+				
+
 
 
 				$this->formatos_model->guarda_historial($query);
@@ -337,8 +383,39 @@ class Admin extends CI_Controller {
 	public function actualizaStatus(){
 		if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
 			$data['datos'] = $this->input->post();
+			$id_historial_formatos = $data['datos']['idSolicitud'];
+			$infoSolicitud = $this->formatos_model->get_detalle_solicitud($data['datos']['idSolicitud']);
+			if($infoSolicitud->requiere_autorizacion == 0){
+					$query = array(
+					   'segunda_autorizacion_status'				=>	$data['datos']['status'],
+					   'segunda_autorizacion_comentario_revisor'	=> 	$data['datos']['comentario_revisor'],
+					   'segunda_autorizacion' 						=> 	1,
+
+					);
+			}else{
+				if($infoSolicitud->primera_autorizacion == 0){
+					//no tiene segunda autorizacion
+					$query = array(
+					   'primera_autorizacion_status'				=>	$data['datos']['status'],
+					   'primera_autorizacion' 						=> 	1,
+					   'primera_autorizacion_comentario_revisor'	=> 	$data['datos']['comentario_revisor'],
+
+
+					);
+				}
+				if($infoSolicitud->primera_autorizacion == 1){
+					//si necesita segunda autorizacion
+					$query = array(
+					   'segunda_autorizacion_status'				=>	$data['datos']['status'],
+					   'segunda_autorizacion' 						=> 	1,
+					   'segunda_autorizacion_comentario_revisor'	=> 	$data['datos']['comentario_revisor'],
+
+
+					);
+				}
+			}
 			$this->load->view('header');
-			$this->formatos_model->actualizaSolicitud($data);
+			$this->formatos_model->actualizaSolicitud($query,$id_historial_formatos);
 			$this->load->view('generaPDF/formato_confirmacion',$data);
 			$this->load->view('footer');
 		} else {

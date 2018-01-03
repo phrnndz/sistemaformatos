@@ -108,7 +108,9 @@ class MantenimientoRegistros extends CI_Controller {
 	public function formato_update(){
 		$data = array(
 				'id_formato' => $this->input->post('id_formato'),
-				'status' => $this->input->post('status')
+				'status' => $this->input->post('status'),
+				'requiere_autorizacion' => $this->input->post('requiere_autorizacion')
+
 			);
 		$this->formatos_model->formato_update(array('id_formato' => $this->input->post('id_formato')), $data);
 		echo json_encode(array("status" => TRUE));

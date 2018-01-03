@@ -3,6 +3,7 @@
 						<thead>
 						<tr>
 									<th>Nombre</th>
+                  <th>Requiere Autorizacion</th>
                   <th>Estatus</th>
 									<th>Acciones</th>
 						</tr>
@@ -11,6 +12,13 @@
 					<?php  foreach ($formatos as $item) { ?>
  						<tr>
 							<td><?php echo $item['nombre_formato'];?></td>
+              <td>
+                <?php if ($item['requiere_autorizacion']==='1') {  ?>
+                  <span>Si</span>
+                <?php }else{ ?>
+                  <span>No</span>
+                <?php } ?>
+              </td>
               <td>
                 <?php if ($item['status']==='1') {  ?>
                   <span class="label label-success">Activo</span>
@@ -128,6 +136,15 @@
                 <option value="0">Desactivado</option>
               </select>
               </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-md-3">Requiere segunda autorizacion</label>
+              <div class="col-md-9">
+              <select name="requiere_autorizacion" id="requiereAutorizacion" class="form-control">
+                <option value="1">Si, requiere</option>
+                <option value="0">No, requiere</option>
+              </select>
+             </div>
             </div>
 							        </form>
                <button type="button" id="btnSave" onclick="save()" class="btn btn-primary">Guardar</button>
